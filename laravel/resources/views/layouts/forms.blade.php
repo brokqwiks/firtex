@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registration</title>
-    <link rel="stylesheet" href=@yield('style')>
+    @yield('style')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300&family=Odor+Mean+Chey&family=Roboto:wght@100&family=Rubik:wght@300&display=swap" rel="stylesheet">
@@ -20,14 +20,14 @@
             </div>
             <div class="btn-selector">
                 <div class="login-btn">
-                    <a href="@" class="login-href">Log In</a>
+                    <a href="{{route('login')}}" class="login-href">Log In</a>
                 </div>
                 <div class="singup-btn">
                     <a href="{{route('register')}}" class="singup-href">Sing Up</a>
                 </div> 
             </div>
             <div class='form-selector'>
-              <form action="{{route('register')}}" id='form-register' method="post" novalidate>
+              <form action=@yield('action-form') id='form-register' method="post" novalidate>
                 @csrf
                 <div>
                   <h1 class="name-input" id="login-name">Login</h1>
@@ -47,5 +47,11 @@
                       placeholder=@yield('error-password')
                     @endif>
                   </div>
+                    @yield('content')
                     <button type="submit" id="submit-btn">@yield("button")</button>
               </form>
+            </div>
+        </div>
+  </body>
+</html>
+              

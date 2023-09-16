@@ -1,16 +1,28 @@
-@extends('layouts.main')
+@extends('layouts.forms')
+
+@section('style')
+<link rel="stylesheet" href="{{asset('css/styles_login.css')}}">
+@endsection
+
+@section('action-form')
+"{{route("login")}}"
+@endsection
+
+@section('button')
+Sing Up
+@endsection
+
+@section('error-login')
+    "Incorrect login or password"
+@endsection
+
 @section('content')
-    <div class='container'>
-        <form action="{{route('login.post')}}" method="post">
-            <div class="mb-3">
-              <label for="login" class="form-label">Login</label>
-              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="login">
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" name="password">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
+    <div class="checkbox-block">
+        <input type="checkbox" id="login-checkbox" name="remember">
+        <h1 class="text" id="checkbox-text">Remember me</h1>
+        <div class="forgot-password">
+            <a href="" class="text" id="forgot-password-text">Forgot password?</a>
+        </div>
     </div>
+    
 @endsection
