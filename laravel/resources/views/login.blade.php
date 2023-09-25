@@ -1,5 +1,9 @@
 @extends('layouts.forms')
 
+@section('title-page')
+Log In
+@endsection
+
 @section('style')
 <link rel="stylesheet" href="{{asset('css/styles_login.css')}}">
 @endsection

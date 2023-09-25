@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string(column:'email')->nullable();
             $table->string(column:'password')->nullable();
             $table->string(column:"remember_token")->nullable();
+            $table->string(column:"profile_img");
             $table->timestamp(column:'created_at');
             $table->timestamp(column:'updated_at');
         });

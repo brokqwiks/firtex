@@ -1,7 +1,13 @@
 @extends('layouts.forms')
+
+@section('title-page')
+Registration
+@endsection
+
 @section('style')
 <link rel="stylesheet" href="{{asset('css/styles_reg.css')}}">
 @endsection
+
 @section('content')
                 @section('action-form')
                 "{{route('register')}}"

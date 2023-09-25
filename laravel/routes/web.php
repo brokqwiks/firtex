@@ -13,11 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/user', fn() => 'profile')->middleware('auth')->name('profile');
-
 Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home');
 Route::get('/reg', 'App\Http\Controllers\RegisterController@create')->middleware('guest')->name('register');
 Route::post('/reg', 'App\Http\Controllers\RegisterController@store')->middleware('guest');
 
 Route::get('/login', 'App\Http\Controllers\Login@create')->name('login');
 Route::post('/login', 'App\Http\Controllers\Login@store')->middleware('guest');
+
+//Route::get('/profile', 'App\Http\Controllers\ProfileController@index')->middleware('auth')->name('profile');
+Route::post('/profile', 'App\Http\Controllers\ProfileController@show')->middleware('auth')->name('profile.post');
+
