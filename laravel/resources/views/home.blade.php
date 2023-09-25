@@ -33,7 +33,9 @@
             @auth
             <div id="profile-block">
                 <div id="profile-btn">
-                    <a href="@" id="profile-href"><img src="" id="user-image"></a>
+                    <a href="profile" id="profile-href">
+                        <img src="{{asset('storage/users/profile_img/'.$profile_img)}}" id="user-img">
+                    </a>
                 </div>
             </div>
             @endauth

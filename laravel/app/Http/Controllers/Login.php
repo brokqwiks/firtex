@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Session;
 
 class Login extends Controller
 {
@@ -31,8 +32,9 @@ class Login extends Controller
         }
         
         $request->session()->regenerate();
+        Session::put('login', $request->login);
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect(route('home'));
 
     }  
 }

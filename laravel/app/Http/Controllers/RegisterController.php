@@ -26,7 +26,7 @@ class RegisterController extends Controller
         ]);
 
         //register logic
-        $user_img_path = $request->login.'.jpg';
+        $user_img_path = $request->login.'.png';
         $hash_password = Hash::make($request->password);
         $user = User::create([
             'login' => $request->login,
@@ -34,7 +34,7 @@ class RegisterController extends Controller
             'password' => $hash_password,
             'profile_img' => $user_img_path
         ]);
-        copy(storage_path('app/public/users/profile_img/test_img.jpg'), storage_path('app/public/users/profile_img/'.$user_img_path));
+        copy(storage_path('app/public/users/profile_img/test_img.png'), storage_path('app/public/users/profile_img/'.$user_img_path));
         Auth::login($user);
         Session::put('login', $request->login);
         return  redirect(route('home'));

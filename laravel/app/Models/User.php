@@ -14,8 +14,11 @@ class User extends Authenticatable
 
     public function storage_users()
     {
-        $storage_users = config('filesystems.links.storage_users');
-
-        return $storage_users;
+        User::create([
+            'login' => 'home',
+            'password' => 'home',
+            'email' => 'home',
+            'profile_img' => 'home'
+        ]);
     }
 }

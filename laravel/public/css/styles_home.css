@@ -205,11 +205,29 @@ body
 #profile-btn
 {
     position: absolute;
-    width: 55px;
-    height: 55px;
+    width: 65px;
+    height: 65px;
     left: 20%;
     top: 20%;
 
     border: 2px solid black;
     border-radius: 90px;
+}
+
+#user-img
+{   
+
+    width: 65px;
+    height: 65px;
+
+    border-radius: 100px;
+}
+
+#profile-href
+{
+    position: absolute;
+    width: 65px;
+    width: 65px;
+
+    border-radius: 100px;
 }
