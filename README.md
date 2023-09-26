@@ -5,4 +5,4 @@ Here is the source code of the Firtex NFT exchange. At the moment, the project i
 
 <h2>Developers</h2>
 <h3>brokqwiks</h3>
-<img scr="https://www.sokol-saratov.ru/img/news/6484cb1381c76.png">
+<a scr="https://t.me/eeeeemaaae">Telegram</a>
