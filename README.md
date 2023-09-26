@@ -6,3 +6,8 @@ Here is the source code of the Firtex NFT exchange. At the moment, the project i
 <h2>Developers</h2>
 <h3>brokqwiks</h3>
 <a href="https://t.me/eeeeemaaae")">Telegram</a>
+<a>Discord</a>
+
+<h2>Support</h2>
+Do you want to support the development of the project? Fill out the <a>questionnaire</a> and you will become a Firtex developer! And if you want to support financially, <a href="">then here is the link</a>.
+Thank you for your help!
