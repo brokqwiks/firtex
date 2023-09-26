@@ -10,7 +10,5 @@ This is the source code of the NFT exchange. The project is currently under deve
 <h3>
 brokqwiks
 </h3>
-<h4>
-Telegram
-</h4>
-<a>
+<a href=""><h4>Telegram</h4></a>
+https://t.me/eeeeemaaae
