@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Profile;
 use Auth;
 use Hash;
 use Illuminate\Http\Request;
@@ -28,16 +29,22 @@ class RegisterController extends Controller
         //Add data about the user to the database and create his profile avatar.
         $user_img_path = $request->login.'.png';
         $hash_password = Hash::make($request->password);
-        $user = User::create([
+        $user_auth = User::create([
             'login' => $request->login,
             'email' => $request->email,
             'password' => $hash_password,
-            'profile_img' => $user_img_path
         ]);
+
+        Profile::create([
+            'login' => $request->login,
+            'profile_img' => $user_img_path,
+            'description' => 'About',
+        ]);
+        
         copy(storage_path('app/public/users/profile_img/test_img.png'), storage_path('app/public/users/profile_img/'.$user_img_path));
 
         //Authorize the user in the system and add login data to the session in order to use them later when opening the profile page.
-        Auth::login($user);
+        Auth::login($user_auth);
         Session::put('login', $request->login);
         return  redirect(route('home'));
     }

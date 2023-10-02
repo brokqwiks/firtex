@@ -22,4 +22,6 @@ Route::post('/login', 'App\Http\Controllers\Auth\Login@store')->middleware('gues
 
 Route::get('/profile', 'App\Http\Controllers\Auth\ProfileController@index')->middleware('auth')->name('profile');
 Route::get('/profile/edit', 'App\Http\Controllers\Auth\ProfileController@edit')->middleware('auth')->name('profile.edit');
+Route::post('/profile/edit', 'App\Http\Controllers\Auth\ProfileController@edit_store')->middleware('auth');
 Route::get('/profile/settings', 'App\Http\Controllers\Auth\ProfileController@settings')->middleware('auth')->name('profile.settings');
+
