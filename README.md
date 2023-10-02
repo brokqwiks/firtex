@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <h1 aling="center">Firtex</h1>
 
 <h2>About</h2>
