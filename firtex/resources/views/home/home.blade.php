@@ -18,13 +18,24 @@
         @auth
         <div class="profile-block">
             <div class="profile-menu">
+                <nav class="menu-list">
+                    <a class="button" id="profile__button" href="{{route('profile')}}">
+                        Profile
+                    </a>
+                    <a class="button" id="wallet__button" href="">
+                        Wallet
+                    </a>
+                    <a class="button" id="settings__button" href="{{route('profile.settings')}}">
+                        Settings
+                    </a>
+
+                    <a class="button" id="exit__button">
+                        Exit
+                    </a>
+                </nav>
                 <div class="menu-button" id="menu-button">
                     <img src="{{asset('storage/users/profile_img/brokqwiks.png')}}" id="button__menu" >
                 </div>
-                <nav class="menu-list">
-                    <a href="#" class="href-menu">Profile</a>
-                    <a href="#" class="href-menu">Settings</a>
-                </nav>
             </div>
  
         </div>
@@ -57,8 +68,8 @@
     <div class="end-menu">
         <div class="profiles-menu">
             <hr id="profiles-line">
-            <a href=""><img src="{{asset('img/icons/home/github-icon.png')}}" class="profile-icon" id="github-icon"></a>
-            <a href=""><img src="{{asset('img/icons/home/discord-icon.png')}}" class="profile-icon" id="discord-icon"></a>
+            <a href="https://github.com/brokqwiks/firtex"><img src="{{asset('img/icons/home/github-icon.png')}}" class="profile-icon" id="github-icon"></a>
+            <a href="https://discord.gg/zt3dedaKMb"><img src="{{asset('img/icons/home/discord-icon.png')}}" class="profile-icon" id="discord-icon"></a>
         </div>
     </div>
     <script src="{{asset('js/main.js')}}"></script>
