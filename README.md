@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> e1e924e7a652552ad007b945fd64fe8d7a7f35d9
 <h1 aling="center">Firtex</h1>
 
 <h2>About</h2>
