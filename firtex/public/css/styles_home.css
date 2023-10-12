@@ -127,7 +127,7 @@ box-shadow: 0 0 5px white,
             0 0 100px white;
 }
 
-.button
+.button__
 {
     position: absolute;
     font-family: "Russo One";
@@ -384,6 +384,7 @@ height: 150px;
     font-family: "Dela Gothic One";
     text-align: center;
     font-weight: 500;
+    text-decoration: none;
   }
   
   .button::before {
@@ -416,7 +417,8 @@ height: 150px;
 
 #exit__button
 {   
-    top: 35%;
+    width: 171px;
+    top: 500%;
     border: 2px solid red;
 }
 

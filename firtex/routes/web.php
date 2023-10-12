@@ -20,8 +20,12 @@ Route::post('/reg', 'App\Http\Controllers\Auth\RegisterController@store')->middl
 Route::get('/login', 'App\Http\Controllers\Auth\Login@create')->name('login');
 Route::post('/login', 'App\Http\Controllers\Auth\Login@store')->middleware('guest');
 
+Route::post('/logout', 'App\Http\Controllers\Auth\Login@destroy')->middleware('auth')->name('logout');
+
+
 Route::get('/profile', 'App\Http\Controllers\Auth\ProfileController@index')->middleware('auth')->name('profile');
 Route::get('/profile/edit', 'App\Http\Controllers\Auth\ProfileController@edit')->middleware('auth')->name('profile.edit');
 Route::post('/profile/edit', 'App\Http\Controllers\Auth\ProfileController@edit_store')->middleware('auth');
 Route::get('/profile/settings', 'App\Http\Controllers\Auth\ProfileController@settings')->middleware('auth')->name('profile.settings');
 
+Route::get('/wallet', 'App\Http\Controllers\Wallet\WalletController@create')->middleware('auth')->name('wallet');

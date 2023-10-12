@@ -39,4 +39,15 @@ class Login extends Controller
         return redirect(route('home'));
 
     }
+
+    public function destroy(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home');
+    }
 }

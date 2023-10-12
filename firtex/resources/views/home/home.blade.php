@@ -28,14 +28,14 @@
                     <a class="button" id="settings__button" href="{{route('profile.settings')}}">
                         Settings
                     </a>
-
-                    <a class="button" id="exit__button">
-                        Exit
-                    </a>
+                    <form action="{{route('logout')}}" method="post">
+                    @csrf
+                        <button type="submit" class="button" id="exit__button">Exit</button>
+                    </form>
                 </nav>
                 <div class="menu-button" id="menu-button">
                     <img src="{{asset('storage/users/profile_img/brokqwiks.png')}}" id="button__menu" >
-                </div>
+                </div>  
             </div>
  
         </div>
@@ -56,10 +56,10 @@
             <h1 id="menu-text">Do you want to participate in the beta test of the project?</h1>
         </div>
         <div class="button-menu">
-            <a id="login-btn" class="button" href="{{route('login')}}">
+            <a id="login-btn" class="button__" href="{{route('login')}}">
                 Log In
             </a>
-            <a id="singup-btn" class="button" href="{{route('register')}}">
+            <a id="singup-btn" class="button__" href="{{route('register')}}">
                 Sing Up
             </a>
         </div>

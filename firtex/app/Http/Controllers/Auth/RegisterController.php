@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Profile;
+use App\Models\Wallet;
 use Auth;
 use Hash;
 use Illuminate\Http\Request;
@@ -40,6 +41,7 @@ class RegisterController extends Controller
             'profile_img' => $user_img_path,
             'description' => 'About',
         ]);
+
         
         copy(storage_path('app/public/users/profile_img/test_img.png'), storage_path('app/public/users/profile_img/'.$user_img_path));
 
