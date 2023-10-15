@@ -13,7 +13,7 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Dela+Gothic+One&family=Questrial&family=Russo+One&display=swap');
   </style>
-<body>
+<body>  
     <div class="header">
         @auth
         <div class="profile-block">
@@ -22,7 +22,7 @@
                     <a class="button" id="profile__button" href="{{route('profile')}}">
                         Profile
                     </a>
-                    <a class="button" id="wallet__button" href="">
+                    <a class="button" id="wallet__button" href="{{route('wallet')}}">
                         Wallet
                     </a>
                     <a class="button" id="settings__button" href="{{route('profile.settings')}}">

@@ -28,4 +28,4 @@ Route::get('/profile/edit', 'App\Http\Controllers\Auth\ProfileController@edit')-
 Route::post('/profile/edit', 'App\Http\Controllers\Auth\ProfileController@edit_store')->middleware('auth');
 Route::get('/profile/settings', 'App\Http\Controllers\Auth\ProfileController@settings')->middleware('auth')->name('profile.settings');
 
-Route::get('/wallet', 'App\Http\Controllers\Wallet\WalletController@create')->middleware('auth')->name('wallet');
+Route::get('/wallet', 'App\Http\Controllers\Wallet\WalletController@index')->middleware('auth')->name('wallet');
