@@ -29,3 +29,5 @@ Route::post('/profile/edit', 'App\Http\Controllers\Auth\ProfileController@edit_s
 Route::get('/profile/settings', 'App\Http\Controllers\Auth\ProfileController@settings')->middleware('auth')->name('profile.settings');
 
 Route::get('/wallet', 'App\Http\Controllers\Wallet\WalletController@index')->middleware('auth')->name('wallet');
+Route::post('/wallet/data', 'App\Http\Controllers\Auth\WalletController@index')->middleware('auth');
+

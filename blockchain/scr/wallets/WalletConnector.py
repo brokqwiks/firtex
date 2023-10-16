@@ -1,6 +1,7 @@
 from WalletDesigner import WalletDesigner
 from DataExchange import DataExchange
 import pymysql
+import requests
 
 
 class WalletConnector():

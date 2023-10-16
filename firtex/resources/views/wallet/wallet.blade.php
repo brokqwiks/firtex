@@ -45,8 +45,10 @@
     </div>
     <div class="wallet-create-block">
         <div id="create-h1-block">
+            <input type="hidden" value="{{$create_wallet}}">
             <h1 id="create-h1">
-                Creating your wallet</h1>
+                Creating your wallet
+            </h1>
         </div>
         <div class="ld-ripple">
             <div></div>
