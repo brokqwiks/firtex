@@ -12,13 +12,4 @@ class User extends Authenticatable
     protected $table = 'users';
     protected $guarded = false;
 
-    public function storage_users()
-    {
-        User::create([
-            'login' => 'home',
-            'password' => 'home',
-            'email' => 'home',
-            'profile_img' => 'home'
-        ]);
-    }
 }

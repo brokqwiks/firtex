@@ -27,19 +27,14 @@ class HomeController extends Controller
         $data = fgets($file);
         fclose($file);
 
-        $url = "127.0.0.1:9000";
 
         $data_connect = ["create_wallet"];
         $url = 'http://localhost:9000';
 
         $ch = curl_init($url);
-	// устанавлваем даные для отправки
 	    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_connect);
-	// флаг о том, что нужно получить результат
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	// отправляем запрос
 	    $response = curl_exec($ch);
-	// закрываем соединение
 	    curl_close($ch);
 
         return view('home/home', compact('profile_img', 'data'));

@@ -9,7 +9,6 @@ body
 html
 {
     overflow-x: hidden;
-    overflow-y: hidden;    
 }
 
 .header
@@ -549,3 +548,519 @@ height: 150px;
       opacity: 0;
     }
   }
+
+#create__wallet-bool
+{
+    position: absolute;
+}
+
+.wallet-private-key_active
+{
+    position: absolute;
+    width: 842px;
+    height: 1000px;
+    left: 27%;
+    top: 20%;
+    background: rgb(33, 33, 33);
+    visibility: hidden;
+
+    border-radius: 30px;
+    
+}
+
+.private-key
+{
+    position: absolute;
+    width: 842px;
+    height: 800px;
+}
+
+.private-key__element
+{
+    position: absolute;
+    width: 200px;
+    height: 57px;
+    box-sizing: border-box;
+    border: 3px solid white;
+    background: white;
+    border-radius: 20px;
+}
+
+#private-key_element0
+{
+    position: absolute;
+    left: 5%;
+    top: 20%;
+}
+
+#private-key_element1
+{
+    position: absolute;
+    top: 35%;
+    left: 5%;
+}
+
+#private-key_element2
+{
+    position: absolute;
+    top: 50%;
+    left: 5%;
+}
+
+#private-key_element3
+{
+    position: absolute;
+    top: 65%;
+    left: 5%;
+}
+
+#private-key_element4
+{
+    position: absolute;
+    top: 80%;
+    left: 5%;
+}
+
+#private-key_element5
+{
+    position: absolute;
+    top: 95%;
+    left: 5%;
+}
+
+#private-key_element6
+{
+    position: absolute;
+    top: 20%;
+    left: 37%;
+}
+
+#private-key_element7
+{
+    position: absolute;
+    top: 35%;
+    left: 37%;
+}
+
+#private-key_element8
+{
+    position: absolute;
+    top: 50%;
+    left: 37%;
+}
+
+#private-key_element9
+{
+    position: absolute;
+    top: 65%;
+    left: 37%;
+}
+
+#private-key_element10
+{
+    position: absolute;
+    top: 80%;
+    left: 37%;
+}
+
+#private-key_element11
+{
+    position: absolute;
+    top: 95%;
+    left: 37%;
+}
+
+#private-key_element12
+{
+    position: absolute;
+    top: 20%;
+    left: 69%;
+}
+
+#private-key_element13
+{
+    position: absolute;
+    top: 35%;
+    left: 69%;
+}
+
+#private-key_element14
+{
+    position: absolute;
+    top: 50%;
+    left: 69%;
+}
+
+#private-key_element15
+{
+    position: absolute;
+    top: 65%;
+    left: 69%;
+}
+
+#private-key_element16
+{
+    position: absolute;
+    top: 80%;
+    left: 69%;
+}
+
+#private-key_element17
+{
+    position: absolute;
+    top: 95%;
+    left: 69%;
+}
+
+.private-key-el
+{
+    position: absolute;
+    text-align: center;
+    color: black;
+    font-family: "Dela Gothic One";
+    font-family: 12px;
+    left: 27%;
+    top: 18%;
+    visibility: hidden;
+}
+
+.header__private-key-h1
+{
+    position: absolute;
+    width: 100%;
+    height: 100px;
+}
+
+.header__private-key-text
+{
+    position: absolute;
+    color: white;
+    font-family: "Dela Gothic One";
+    font-size: 38px;
+    left: 25%;
+}
+
+.show-private-key-btn
+{
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    top: 100%;
+    left: 37%;
+}
+
+.button2 {
+    top: 85%;
+    left: 37%;
+    width: 200px;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.2s ease-in;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    color: #090909;
+    padding: 0.7em 1.7em;
+    font-size: 18px;
+    border-radius: 0.5em;
+    background: black;
+    border: 1px solid #e8e8e8;
+    box-shadow: 2px 2px 5px #c5c5c5,
+               -2px -2px 5px #ffffff;
+    font-family: "Dela Gothic One";
+    color: white;
+  }
+  
+  .button2:active {
+    color: black;
+    box-shadow: inset 4px 4px 12px #c5c5c5,
+               inset -4px -4px 12px black;
+  }
+  
+  .button2:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) scaleY(1) scaleX(1.25);
+    top: 100%;
+    width: 140%;
+    height: 180%;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    display: block;
+    transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+    z-index: -1;
+  }
+  
+  .button2:after {
+    content: "";
+    position: absolute;
+    left: 55%;
+    transform: translateX(-50%) scaleY(1) scaleX(1.45);
+    top: 180%;
+    width: 160%;
+    height: 190%;
+    background-color: white;
+    border-radius: 50%;
+    display: block;
+    transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+    z-index: -1;
+  }
+  
+  .button2:hover {
+    color: black;
+    border: 1px solid white;
+  }
+  
+  .button2:hover:before {
+    top: -35%;
+    background-color: blacks;
+    transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+  }
+  
+  .button2:hover:after {
+    top: -45%;
+    background-color: white;
+    transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+  }
+  
+  .Btn {
+    visibility: hidden;
+    position: absolute;
+    top: 88%;
+    left: 37%;
+    width: 200px;
+    height: 45px;
+    background-color: white;
+    border: none;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.342);
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    position: relative;
+    overflow: hidden;
+    transition-duration: .5s;
+  }
+  
+  .text {
+    color: black;
+    font-weight: 800;
+    letter-spacing: 1.1px;
+    font-family: "Dela Gothic One";
+    z-index: 2;
+  }
+  
+  .svgIcon {
+    z-index: 2;
+  }
+  
+  .svgIcon path {
+    fill: black;
+  }
+  
+  .Btn:hover {
+    color: black;
+  }
+  
+  .effect {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 0;
+    transition-duration: .5s;
+  }
+  
+  .Btn:hover .effect {
+    transform: scale(15);
+    transform-origin: center;
+    opacity: 1;
+    transition-duration: .5s;
+  }
+  
+  .Btn:hover {
+    box-shadow: 0px 0px 5px white,
+    0px 0px 10px white,
+    0px 0px 30px white;
+    transition-duration: .7s;
+  }
+  
+  .Btn:hover .text {
+    color: white;
+  }
+  
+  .Btn:hover .svgIcon path {
+    fill: white;
+  }
+
+.number-private-key
+{
+    position: absolute;
+    position: absolute;
+    text-align: center;
+    color: black;
+    font-family: "Dela Gothic One";
+    font-family: 12px;
+    left: 10%;
+    top: 18%;
+}
+
+.hidden-private-key-block
+{
+    position: absolute;
+    width: 120px;
+    height: 35px;
+    background: rgb(194, 193, 193);
+    border-radius: 20px;
+
+    transition: .5s;
+}
+
+#hidden-private-key-block__0
+{
+    position: absolute;
+    z-index: 1;
+    left: 12%;
+    top: 21%;
+}
+
+#hidden-private-key-block__1
+{
+    position: absolute;
+    z-index: 1;
+    left: 12%;
+    top: 36%;
+}
+
+#hidden-private-key-block__2
+{   
+    position: absolute;
+    z-index: 1;
+    left: 12%;
+    top: 51%;
+}
+
+#hidden-private-key-block__3
+{   
+    position: absolute;
+    z-index: 1;
+    left: 12%;
+    top: 66%;
+}
+
+#hidden-private-key-block__4
+{   
+    position: absolute;
+    z-index: 1;
+    left: 12%;
+    top: 81%;
+}
+
+#hidden-private-key-block__5
+{   
+    position: absolute;
+    z-index: 1;
+    left: 12%;
+    top: 96%;
+}
+
+#hidden-private-key-block__6
+{   
+    position: absolute;
+    z-index: 1;
+    left: 44.3%;
+    top: 21%;
+}
+
+#hidden-private-key-block__7
+{   
+    position: absolute;
+    z-index: 1;
+    left: 44.3%;
+    top: 36%;
+}
+
+#hidden-private-key-block__8
+{   
+    position: absolute;
+    z-index: 1;
+    left: 44.3%;
+    top: 51%;
+}
+
+#hidden-private-key-block__9
+{   
+    position: absolute;
+    left: 44.3%;
+    top: 66%;
+    z-index: 1;
+}
+
+#hidden-private-key-block__10
+{   
+    position: absolute;
+    left: 44.3%;
+    top: 81%;
+    z-index: 1;
+}
+
+#hidden-private-key-block__11
+{   
+    position: absolute;
+    left: 44.3%;
+    z-index: 1;
+    top: 96%;
+}
+
+#hidden-private-key-block__12
+{   
+    position: absolute;
+    top: 21%;
+    left: 77%;
+    z-index: 1;
+}
+
+#hidden-private-key-block__13
+{   
+    position: absolute;
+    left: 77%;
+    top: 36%;
+    z-index: 1;
+}
+
+#hidden-private-key-block__14
+{   
+    position: absolute;
+    left: 77%;
+    top: 51%;
+    z-index: 1;
+}
+
+#hidden-private-key-block__15
+{   
+    position: absolute;
+    left: 77%;
+    top: 66%;
+    z-index: 1;
+}
+
+#hidden-private-key-block__16
+{   
+    position: absolute;
+    left: 77%;
+    top: 81%;
+    z-index: 1;
+}
+
+#hidden-private-key-block__17
+{   
+    position: absolute;
+    left: 77%;
+    top: 96%;
+    z-index: 1;
+}

@@ -45,7 +45,7 @@
     </div>
     <div class="wallet-create-block">
         <div id="create-h1-block">
-            <input type="hidden" value="{{$create_wallet}}">
+            <input type="hidden" value="{{$create_wallet}}" id="create__wallet-bool">
             <h1 id="create-h1">
                 Creating your wallet
             </h1>
@@ -54,6 +54,27 @@
             <div></div>
             <div></div>
           </div>
+    </div>
+
+    <div class="wallet-private-key_active">
+        <div class="header__private-key-h1">
+            <h1 class="header__private-key-text">Your secret phrase</h1>
+        </div>
+        <input type="hidden" value="{{$data[3]}}" id="private-key-str">
+        <div class="private-key">
+            @for($el=0; $el < count($data[2]); $el++)
+                <div class="hidden-private-key-block" id="hidden-private-key-block__{{$el}}"></div>
+                <div class="private-key__element" id="private-key_element{{$el}}"><a class="number-private-key">{{$el + 1}}{{'. '}}</a><a class="private-key-el">{{$data[2][$el]}}</a></div>
+            @endfor 
+        </div>
+        <button class="button2">
+            Show
+        </button>
+        <button class="Btn">
+            <svg viewBox="0 0 512 512" class="svgIcon" height="1em"><path d="M288 448H64V224h64V160H64c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H288c35.3 0 64-28.7 64-64V384H288v64zm-64-96H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H224c-35.3 0-64 28.7-64 64V288c0 35.3 28.7 64 64 64z"></path></svg>
+            <p class="text">COPY</p>
+            <span class="effect"></span>
+          </button>
     </div>
     <script src="{{asset('js/main.js')}}"></script>
 </body>

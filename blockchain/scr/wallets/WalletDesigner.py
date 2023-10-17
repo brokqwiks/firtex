@@ -1,15 +1,13 @@
 from hashlib import *
 from time import time, ctime
-from ecdsa import SigningKey, SECP256k1
 from cryptography.hazmat.primitives.asymmetric import ec
-from near_seed_phrase.main import generate_seed_phrase
 from Blockthon import Wallet
 
 class WalletDesigner:
 
     def create_private_key(self):
         private_key = Wallet.getPrivateKey()
-        seed_phrase = Wallet.PrivateKey_To_Mnemonic(private_key, size=12)
+        seed_phrase = Wallet.PrivateKey_To_Mnemonic(private_key, size=18)
 
         return [private_key, seed_phrase]
 

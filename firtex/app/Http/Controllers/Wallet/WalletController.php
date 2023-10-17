@@ -84,6 +84,11 @@ class WalletController extends Controller
             $data = data_send();
             $create_wallet = 'true';
 
+            $words = explode(" ", $data[2]);
+            $data[3] = $data[2];
+            $data[2] = $words;
+            
+
             return view('wallet/wallet', compact('data', 'create_wallet'));
 
         }
