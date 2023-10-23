@@ -10,6 +10,8 @@ const hidden_private_key = document.getElementsByClassName('hidden-private-key-b
 const private_key_el = document.getElementsByClassName('private-key-el');
 const copy_btn = document.querySelector('.Btn');
 const private_key_str = document.getElementById('private-key-str');
+const active_menu = document.querySelector('.active-menu');
+const active_menu_text = document.querySelector('#active-menu-text');
 
 var open_menu = false;
 
@@ -97,11 +99,57 @@ show_private_key_btn.addEventListener('click', function()
     }
 })
 
+const animation_checkmark = document.querySelector('.checkmark')
+
+
+
 copy_btn.addEventListener('click', function()
 {   
-    let text = private_key_str.value;
-    const copyContent = async () => {
-    await navigator.clipboard.writeText(text);
-    alert('copied')
+    const private_key = private_key_str.value;
+    
+    const words = private_key.split(" ");
+    const modifiedSentence = words.map((word, index) => `${index + 1 + '.'} ${word}`);
+    
+    const result = modifiedSentence.join(" ");
+    navigator.clipboard.writeText(result);
+    
+    const next_btn = document.querySelector('.next-btn');
+    next_btn.style.visibility = "visible";
+    next_btn.style.left = "70%";
+    
+    document.documentElement.scrollIntoView(true);
+    
+    active_menu_text.innerHTML = "Copied";
+    active_menu.style.width = "230px";
+    active_menu.style.left = "44%"
+    active_menu_text.style.left = "42%";
+    active_menu.style.top = "5%";
+    setTimeout(() => {active_menu.style.top = "-100%";}, 3000)
+});
+
+const next_btn = document.querySelector('.next-btn');
+const confirm_private_key = document.getElementsByClassName('confirm-private-key');
+const send_btn = document.querySelector('.send-btn');
+
+next_btn.onclick = function() {
+    next_btn.style.visibility = "hidden";
+    show_private_key_btn.style.visibility = "hidden"
+    copy_btn.style.visibility = "hidden";
+    send_btn.style.visibility = "visible";
+    for (let index = 0; index < private_key_el.length; index++) {
+        const element = private_key_el[index];
+        element.style.visibility = "hidden"
     }
-})
+    for (let index = 0; index < hidden_private_key.length; index++) {
+        const element = hidden_private_key[index];
+        element.style.visibility = "hidden";
+    }
+    for (let index = 0; index < confirm_private_key.length; index++) {
+        const element = confirm_private_key[index];
+        element.style.visibility = "visible";
+    }
+}
+
+const succes_private_key = document.getElementById('succes')
+
+

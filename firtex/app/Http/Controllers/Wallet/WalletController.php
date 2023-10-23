@@ -88,7 +88,7 @@ class WalletController extends Controller
             $data[3] = $data[2];
             $data[2] = $words;
             
-
+            Session::put("private-key", $data[2]);
             return view('wallet/wallet', compact('data', 'create_wallet'));
 
         }
@@ -98,8 +98,39 @@ class WalletController extends Controller
         }
     }
 
-    public function create()
-    {
+    public function confirm_private_key(Request $request)
+    {   
+        $succes_data = [];
+        $errors_data = [];
+        $private_key = Session::get('private-key');
+        $data = $request->all();
+        $str = 'confirm-el-';
+
+        dump($data);
+        dump($private_key);
+
+        for ($i=0; $i < count($data) - 1; $i++) { 
+            $data_element = $data[$str.strval($i)];
+            $element_private_key = $private_key[$i];
+            if($data_element == $element_private_key)
+            {
+                $succes_data[$i] = 'succes';
+            }
+            else {
+                $errors_data[$i] = $data_element;
+            }
+            }
+        
+        
+        if(count($errors_data) > 0)
+        {
+            return view('wallet/wallet', compact('errors_data'));
+        }
+        elseif(count($succes_data) == 18)
+        {   
+            $succes = "succes";
+            return redirect(route('wallet'))->with(['succes' => $succes]);
+        }
 
     }
 }

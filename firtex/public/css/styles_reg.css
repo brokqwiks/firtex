@@ -1,249 +1,383 @@
 body
 {
-    background-color: black;
-    overflow-x: hidden;
+    background: black;
+    width: 100%;
+    height: 100%;
+    margin-top: 0;
+    margin-left: 0;
+    margin-bottom: 0;
+    margin-right: 0;
 }
 
-.header
-{   
-    position: absolute;
-    width: 1300px;
-    height: 1000px;
-    top: 10%;
-}
-
-.logo-selector
-{   
-    position: relative;
-    left: 64%;
-    top: -5%;
-}
-
-.logo
-{   
-    position: relative;
-    left: 0;
-    width: 218px;
-    height: 110px;
-}
-
-.logo-white
+.main-block
 {
+    position: absolute;
+    width: 1200px;
+    height: 960px;
+}
+
+.second-block
+{
+    position: absolute;
+    width: 673px;
+    height: 960px;
+    right: 0;
+}
+
+.logo-block
+{
+    position: absolute;
+    left: 37%;
+    top: 5%;
     transition: .5s;
 }
 
-.logo-white:hover
+.logo-block:hover
 {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
-.home-page-href
-{   
+.welcome-block
+{
     position: absolute;
-    left: 0;
-    width: 219px;
-    height: 110px;
-}
-
-.btn-selector
-{       
-    width: 240px;
-    height: 200px;
-    position: relative;
-    top: 0;
-    left: 60%;
-}
-
-.login-btn
-{   
-    
-    position: relative;
-
-    transition: 5s;
-}
-
-.singup-btn
-{
-    position: relative;
-    top: -18%;
-    left: 90%;
-}
-
-.login-href
-{   
-    position: relative;
-    color: grey;
-    font-size: 30px;
-    font-family: "Rubik", sans-serif;
-    text-decoration: none;
-
-    transition: 1s;
-}
-
-.login-href:hover
-{
-    transform: scale(1.2);
-    color: white;
-}
-
-.singup-href
-{   
-    color: white;
-    font-size: 30px;
-    font-family: "Rubik", sans-serif;
-    text-decoration: none;
-}
-
-.form-selector
-{
-    position: relative;
-    left: 59%;
-    top: -10%;
-    width: 240px;
-    height: 1000px;
-}
-
-#form-register
-{
+    top: 30%;
     left: 20%;
 }
 
-.login-input-selector
+#welcome-text
+{   
+    cursor: pointer;
+    position: absolute;
+    font-family: "Dela Gothic One";
+    color: white;
+    width: 450px;
+    transition: .5s;
+}
+
+#welcome-text:hover
+{
+    text-shadow: 0 0 25px rgb(170, 169, 169);
+}
+
+
+.data-input
 {
     position: absolute;
+    background: white;
+    top: 15%;
+    left: 0%;
+    width: 1013px;
+    height: 1200px;
+    
+    border-radius: 20px;
+
+    transition: .5s;
+}
+
+.choice-menu
+{
+    position: absolute;
+    left: 20%;
+    width: 600px;
+    height: 100px;
+}
+
+.menu-element
+{
+    position: absolute;
+    width: 200px;
+    height: 50px;
+    font-family: "Dela Gothic One";
+    font-size: 36px;
+    top: 20%;
+}
+
+#login-element
+{
+    position: absolute;
+    left: 10%;
+}
+
+#login-text
+{
+    position: absolute;
+    color: rgb(94, 93, 93);
+    text-decoration: none;
+    transition: .5s;
+}
+
+#login-text:hover
+{
+    color: black;
+    transform: scale(1.1);
+}
+
+#singup-element
+{
+    position: absolute;
+    left: 65%;
+}
+
+#singup-text
+{
+    position: absolute;
+    color: black;
+    text-decoration: none;
+
+    transition: .5s;
+}
+
+#singup-text:hover
+{
+    color: black;
+    transform: scale(1.1);
+}
+
+#vl
+{   
+    position: absolute;
+
+    border-left: 5px solid black;
+    height: 80px;
+    left: 48%;
+}
+
+.input-block
+{
+    position: absolute;
+    top: 20%;
+    width: 925px;
+    height: 393px;
 }
 
 .input
 {
     position: absolute;
-    width: 314px;
-    height: 53px;
-    top: 12.7%;
-    left: 2.7%;
-    padding-left: 10%;
-
-    background: rgb(38, 38, 38);
+    width: 695px;
+    height: 90px;
     color: white;
-    font-size: 15px;
+    font-family: "Dela Gothic One";
+    font-size: 20px;
+    background: rgb(73, 71, 71);
+    border-radius: 20px;
     border: none;
-    border-radius: 10px;
+    padding-left: 5%;
+    left: 5%;
 }
 
-.input::placeholder
+#login-input
 {
-    color: rgb(171, 1, 1);
-    font-family: 'Rubik' sans-serif;
+    position: absolute;
+    top: -16%;
 }
 
-.input-selector
+#email-input
+{
+    position: absolute;
+    top: 40%;
+}
+
+#remember-checkbox
+{
+    position: absolute;
+    border: 3px solid black;
+}
+
+#content-privacy-policy
+{
+    position: absolute;
+    top: 212%;
+    left: 7%;
+}
+
+.clear {
+    clear: both;
+  }
+  
+  .checkBox {
+    display: block;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    top: 40%;
+    border: 3px solid rgba(255, 255, 255, 0);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0px 0px 0px 2px black;
+  }
+  
+  .checkBox div {
+    width: 60px;
+    height: 60px;
+    background-color: black;
+    top: -52px;
+    left: -52px;
+    position: absolute;
+    transform: rotateZ(45deg);
+    z-index: 100;
+  }
+  
+  .checkBox input[type=checkbox]:checked + div {
+    left: -10px;
+    top: -10px;
+  }
+  
+  .checkBox input[type=checkbox] {
+    position: absolute;
+    left: 50px;
+    visibility: hidden;
+  }
+  
+  .transition {
+    transition: 300ms ease;
+  }
+
+  #content-remember
+  {
+      position: absolute;
+      top: 190%;
+      left: 7%;
+  }
+  
+  .clear {
+      clear: both;
+    }
+    
+    .checkBox {
+      display: block;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      top: 40%;
+      border: 3px solid rgba(255, 255, 255, 0);
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0px 0px 0px 2px black;
+    }
+    
+    .checkBox div {
+      width: 60px;
+      height: 60px;
+      background-color: black;
+      top: -52px;
+      left: -52px;
+      position: absolute;
+      transform: rotateZ(45deg);
+      z-index: 100;
+    }
+    
+    .checkBox input[type=checkbox]:checked + div {
+      left: -10px;
+      top: -10px;
+    }
+    
+    .checkBox input[type=checkbox] {
+      position: absolute;
+      left: 50px;
+      visibility: hidden;
+    }
+    
+    .transition {
+      transition: 300ms ease;
+    }
+
+
+#form-data
+{
+}
+
+.text-input
+{
+    position: absolute;
+    color: black;
+    font-family: "Dela Gothic One";
+}
+
+#login-input-text
+{
+    position: absolute;
+    left: 7%;
+    top: -35%;
+}
+
+#email-input-text
+{
+    position: absolute;
+    left: 7%;
+    top: 21%;
+}
+
+.text-checkbox
+{
+    position: absolute;
+    font-family: "Dela Gothic One";
+    color: black;
+}
+
+#text-checkbox-remember
+{
+    position: absolute;
+    top: 185%;
+    left: 14%;
+}
+
+#text-checkbox-accept
+{
+    position: absolute;
+    top: 207%;
+    left: 14%;
+}
+
+#go-btn
 {   
     position: absolute;
     width: 373px;
-    height: 77px;
-
-    background: rgb(59, 59, 59);
-    border-radius: 10px;
-}
-
-#login
-{
-    position: absolute;
-}
-
-#email
-{
-    position: absolute;
-    top: 15%;
-}
-
-#password
-{
-    position: absolute;
-    top: 30%;
-}
-
-#confirm-password
-{
-    position: absolute;
-    top: 45%;
-}
-
-#submit-btn
-{
-    position: absolute;
-    width: 374px;
-    height: 77px;
-    top: 60%;
-
+    height: 132px;
     border: none;
-    border-radius: 10px;
-
-    background: rgb(0, 106, 255);
+    font-family: "Dela Gothic One";
+    left: 137%;
+    top: 100%;
+    font-size: 42px;
+    cursor: pointer;
+    z-index: 1;
+    
     color: white;
-    font-size: 36px;
-    font-family: 'Rubik', sans-serif;
-    font-weight: 900;
-    line-height: 43px;
-    letter-spacing: 0px;
-    text-align: center;
+    background: rgb(46, 39, 49);
 
-    transition: 1s;
+    
+    border-radius: 40px;
+    transition: .5s;
 }
 
-#submit-btn:hover
+#go-btn:hover
 {
     transform: scale(1.1);
 }
 
-.name-input
+#password-input
 {
     position: absolute;
-    
-    font-family: 'Rubik', sans-serif;
-    font-size: 18px;
-    color: white;
+    top: 95%;
 }
 
-#login-name
+#password-input-text
 {
     position: absolute;
-    top: -4%;
+    left: 7%;
+    top: 76%;
 }
 
-#email-name
+#confirm-password-input
 {
     position: absolute;
-    top: 11%;
+    top: 150%;
 }
 
-#password-name
+#confirm-password-input-text
 {
     position: absolute;
-    top: 26%;
-}
-
-#confirm-password-name
-{
-    position: absolute;
-    top: 41%;
-}
-
-.email-error-block
-{
-    position: absolute;
-    width: 373px;
-    height: 31px;
-    top: 44%;
-    left: 59%;
-}
-
-.email-error
-{
-    position: absolute;
-    width: 373px;
-    height: 31px;
-    
-    font-family: 'Rubik' sans-serif;
-    font-size: 15px;
-    color: red;
+    left: 6.5%;
+    top: 131%;
 }

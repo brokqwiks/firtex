@@ -17,6 +17,7 @@ Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home');
 Route::get('/reg', 'App\Http\Controllers\Auth\RegisterController@create')->middleware('guest')->name('register');
 Route::post('/reg', 'App\Http\Controllers\Auth\RegisterController@store')->middleware('guest');
 
+
 Route::get('/login', 'App\Http\Controllers\Auth\Login@create')->name('login');
 Route::post('/login', 'App\Http\Controllers\Auth\Login@store')->middleware('guest');
 
@@ -29,5 +30,4 @@ Route::post('/profile/edit', 'App\Http\Controllers\Auth\ProfileController@edit_s
 Route::get('/profile/settings', 'App\Http\Controllers\Auth\ProfileController@settings')->middleware('auth')->name('profile.settings');
 
 Route::get('/wallet', 'App\Http\Controllers\Wallet\WalletController@index')->middleware('auth')->name('wallet');
-Route::post('/wallet/data', 'App\Http\Controllers\Auth\WalletController@index')->middleware('auth');
-
+Route::post('/wallet', "App\Http\Controllers\Wallet\WalletController@confirm_private_key")->middleware('auth');

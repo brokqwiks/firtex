@@ -22,21 +22,7 @@ class HomeController extends Controller
         {
             $profile_img = null;
         }
-        
-        $file = fopen("C:/OpenServer/domains/test/blockchain/data/data.txt", "r+");
-        $data = fgets($file);
-        fclose($file);
 
-
-        $data_connect = ["create_wallet"];
-        $url = 'http://localhost:9000';
-
-        $ch = curl_init($url);
-	    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_connect);
-	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	    $response = curl_exec($ch);
-	    curl_close($ch);
-
-        return view('home/home', compact('profile_img', 'data'));
+        return view('home/home', compact('profile_img',));
     }
 }
