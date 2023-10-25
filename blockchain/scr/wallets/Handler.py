@@ -14,7 +14,7 @@ class Handler():
                 private_key = wallet.create_private_key(1)
                 public_key = wallet.private_key_to_public_key(private_key[0])[0]
                 connector.send_private_key(private_key, creating_wallet[1])
-                time.sleep(2)
+                time.sleep(3)
                 return connector.delete_private_key(1)
 
 while True:
