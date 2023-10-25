@@ -1,0 +1,238 @@
+html
+{
+
+}
+
+body
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.header
+{
+    position: absolute;
+    width: 1590px;
+    height: 252px;
+    top:25%;
+    left:10%;
+
+}
+
+#profile-img-block
+{
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    left: 8%;
+}
+
+#profile-img-frame
+{
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    box-sizing: border-box;
+
+    border-radius: 100px;
+    border: 3px solid black;
+}
+
+.user-profile-img
+{
+    position: absolute;
+    width: 105px;
+    height: 105px;
+    left: -0.1%;
+    border-radius: 100px;
+}
+
+#nick-block
+{
+    position: absolute;
+    left: 18.5%;
+    top: 24%;
+}
+
+.user-login
+{
+    position: absolute;
+    text-decoration: none;
+    color:  black;
+    font-family: 'Rubik', sans-serif;
+    font-size: 24px;
+}
+
+.menu
+{
+    position: absolute;
+    width: 1600px;
+    height: 477px;
+    left: 16%;
+    top: 50%;
+}
+
+.select-item
+{
+    position: absolute;
+    width: 750px;
+    height: 64px;
+
+}
+
+.item
+{
+    position: absolute;
+}
+
+#collections-button
+{
+    position: absolute;
+}
+
+.line-item
+{
+    position: absolute;
+    width: 221px;
+    height: 0;
+    top: 100%;
+
+    color: black;
+    border: 1px solid black;
+}
+
+.name-item
+{
+    position: absolute;
+
+}
+
+#collections-item
+{
+    position: relative;
+    left: 65%;
+    text-decoration: none;
+    
+
+    font-size: 18px;
+    font-family: 'Rubik', sans-serif;
+    text-align: center;
+    color: black;
+}
+
+#collections-line
+{
+    position: absolute;
+    color: black;
+}
+
+#about-button
+{
+    position: absolute;
+    left: 40%;
+}
+
+#about-line
+{
+    position: absolute;
+
+}
+
+#about-item
+{
+    position: relative;
+    text-decoration: none;
+    left: 160%;
+    
+    color: grey;
+    font-size: 18px;
+    font-family: 'Rubik', sans-serif;
+    text-align: center;
+
+    transition: .5s;
+}
+
+#about-item:hover
+{
+    color: black;
+}
+
+#created-button
+{
+    position: absolute;
+    left: 80%;
+}
+
+#created-item
+{
+    position: relative;
+    text-decoration: none;
+    left: 140%;
+
+    font-family: 18px;
+    font-family: 'Rubik', sans-serif;
+    text-align: center;
+    color: grey;
+
+    transition: .5s;
+}
+
+#created_line
+{
+    position: absolute;
+    color: grey;
+}
+
+#created-item:hover
+{
+    color: black;
+}
+
+.logo-block
+{
+    position: absolute;
+    left:47%;
+    top: 4%;
+}
+
+.logo-img
+{
+    position: absolute;
+
+    transition: 1s;
+}
+
+.logo-img:hover
+{
+    transform: scale(1.05);
+}
+
+#edit-icon
+{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+}
+
+#edit-login
+{
+    position: absolute;
+    left: 2%;
+    top: 20%;
+}
+
+#settings-block
+{
+    position: absolute;
+    top: 20%;
+    left: -1%;
+}
+
+#settings-icon
+{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+
+}
