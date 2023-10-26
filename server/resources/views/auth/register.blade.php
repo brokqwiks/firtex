@@ -27,16 +27,16 @@
         <form action="{{route('register')}}" id="form-data" method="post">
           @csrf
           <h1 class="text-input" id="login-input-text">Login</h1>
-          <input type="text" class="input" id="login-input" name="login">
+          <input type="text" class="input" id="login-input" name="login" value="{{ old('login')}}">
           
           <h1 class="text-input" id="email-input-text">Email</h1>
-          <input type="email" class="input" id="email-input" name="email">
+          <input type="email" class="input" id="email-input" name="email" value="{{ old('email')}}">
 
           <h1 class="text-input" id="password-input-text">Password</h1>
-          <input type="password" class="input" id="password-input" name="password">
+          <input type="password" class="input" id="password-input" name="password" value="{{ old('password')}}">
 
           <h1 class="text-input" id="confirm-password-input-text">Confirm Password</h1>
-          <input type="password" class="input" id="confirm-password-input" name="password_confirmation">
+          <input type="password" class="input" id="confirm-password-input" name="password_confirmation" value="{{ old('password_confirmation')}}">
 
           
           <h2 class="text-checkbox" id="text-checkbox-remember">Remember me</h2>

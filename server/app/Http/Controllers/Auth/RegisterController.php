@@ -11,6 +11,7 @@ use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Session;
+use Symfony\Component\Console\Input\Input;
 
 class RegisterController extends Controller
 {
@@ -54,7 +55,6 @@ class RegisterController extends Controller
         }
         else
         {   
-            $request->flash();
             return back()->withInput();
         }
     }
