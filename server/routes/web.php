@@ -31,3 +31,7 @@ Route::get('/profile/settings', 'App\Http\Controllers\Auth\ProfileController@set
 
 Route::get('/wallet', 'App\Http\Controllers\Wallet\WalletController@index')->middleware('auth')->name('wallet');
 Route::post('/wallet', "App\Http\Controllers\Wallet\WalletController@confirm_private_key")->middleware('auth');
+
+Route::get('/wallet/key','App\Http\Controllers\Wallet\WalletController@show')->middleware('auth')->name('wallet.key');
+Route::post('/wallet/key','App\Http\Controllers\Wallet\WalletController@show_post')->middleware('auth');
+

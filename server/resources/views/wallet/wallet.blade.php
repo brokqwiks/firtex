@@ -90,11 +90,12 @@
             Next
         </button>
     </div>
-    
-    <div class="create-finish">
-        <h1 id="create-finish-text">Your wallet is created!</h1>
-    </div>
     @endif
+    <form action="{{route('wallet.key')}}" method="post">
+    @csrf
+    <input type="hidden" value="{{hash('sha256', $data[0])}}" name="_token_user">
+    <button id="create-finish" type="submit">Your wallet is created!</button>
+    </form>
     
     <div class="active-menu">
         <h1 id="active-menu-text">Active menu</h1>

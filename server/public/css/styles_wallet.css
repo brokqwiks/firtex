@@ -1361,7 +1361,7 @@ height: 150px;
     scale: 1;
   }
 
-.create-finish
+#create-finish
 {
     position: absolute;
 
@@ -1372,11 +1372,7 @@ height: 150px;
     height: 90px;
     background: rgb(28, 25, 36);
     border-radius: 40px;
-    visibility: hidden;
-}
-
-#create-finish-text
-{   
+    visibility: visible;
     cursor: pointer;
     position: absolute;
     color: white;

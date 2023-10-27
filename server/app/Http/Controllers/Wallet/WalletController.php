@@ -13,8 +13,9 @@ class WalletController extends Controller
 {
     public function index(Request $request)
     {   
-        $login = Session::get('login');
-        $user = Wallet::where('login', $login)->get()->first();
+        $login = hash('sha256',Session::get('login'));
+        $token_user =hash('sha256', $login.$login);
+        $user = Wallet::where('login', $token_user)->get()->first();
         if($user == null)
         {   
 
@@ -98,12 +99,9 @@ class WalletController extends Controller
             $data[2] = $words;
             
             $private_key = $data[1];
-
-            Wallet::create([
-                "login" => $login,
-                "private_key" => $private_key,
-            ]);
-
+            $hash_login = hash('sha256', $data[0]);
+            Session::put('_token_user', $hash_login);
+            Session::put('private_key' , $private_key);
             return view('wallet/wallet', compact('data', 'create_wallet'));
             }
 
@@ -112,8 +110,33 @@ class WalletController extends Controller
         {   
             $create_wallet = "false";
             $data = "false";
+            $hash_login = hash('sha256', $data[0]);
+            Session::put('_token_user', $hash_login);
             return view('wallet/wallet', compact('create_wallet', 'data'));
         }
+    }
+
+    public function show()
+    {
+        return view('wallet/wallet');
+    }
+
+    public function show_post(Request $request)
+    {   
+        $_token_user_session = Session::get('_token_user');
+        $_token_user_form = $request->_token_user;
+        $private_key = Session::get('private_key');
+
+        if($_token_user_session == $_token_user_form)
+        {   
+            $token_user = hash('sha256', $_token_user_session.$_token_user_form);
+            Wallet::create([
+                'login' => $token_user,
+                'private_key' => $private_key
+            ]);
+        }
+        
+        return redirect(route('wallet'));
     }
 
 }
