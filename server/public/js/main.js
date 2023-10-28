@@ -158,7 +158,7 @@ next_btn.onclick = function() {
     }
 }
 
-const create_finish_block = document.querySelector('.create-finish')
+const create_finish_block = document.querySelector('#create-finish')
 const back_btn = document.querySelector('#back-btn')
 const errors_h2 = document.querySelector('#header__errors-text')
 

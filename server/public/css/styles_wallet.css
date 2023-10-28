@@ -1372,13 +1372,22 @@ height: 150px;
     height: 90px;
     background: rgb(28, 25, 36);
     border-radius: 40px;
-    visibility: visible;
+    visibility: hidden;
     cursor: pointer;
     position: absolute;
     color: white;
     font-family: "Dela Gothic One";
     text-align: center;
-    left: 15%;
+    border: none;
+    font-size: 24px;
+    left: 33%;
+
+    transition: .5s;
+}
+
+#create-finish:hover
+{
+    transform: scale(1.1);
 }
 
 #back-btn
