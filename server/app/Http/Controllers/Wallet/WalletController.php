@@ -41,45 +41,22 @@ class WalletController extends Controller
                 $login = Session::get('login');
                 $file = "C:/OpenServer/domains/test/blockchain/data/data.txt";
                 $data = file_get_contents($file);
-                $lines = explode("\n", $data);
-
                 // Инициализация пустого массива для хранения групп:
-                $groups = [];
 
                 // Инициализация временного массива:
-                $temp = [];
 
                 // Проход по каждой строке:
-                foreach ($lines as $line) {
-                    // Если текущая строка не пуста:
-                    if (!empty(trim($line))) {
-                        $temp[] = $line;  // добавить ее во временный массив.
-                    }
 
-                    // Если во временном массиве три строки:
-                    if (count($temp) == 3) {
-                        $groups[] = $temp;  // добавить его в основной массив.
-                        $temp = [];  // обнулить временный массив.
-                    }
+                $lines = explode("\r\n", $data);
+                $array = [];
+
+                foreach($lines as $line) {
+                    $array[] = $line;
                 }
 
-                foreach ($groups as $key => $subarray) {
-                    foreach ($subarray as $subkey => $string) {
-                        $groups[$key][$subkey] = str_replace("\r", "", $string);
-                        // альтернативно можно использовать trim с указанным символом: $array[$key][$subkey] = trim($string, "\r");
-                    }
-                }
-                
-                
+                array_pop($array);
 
-                foreach($groups as $subarray)
-                {
-                    if($subarray[0] == $login)
-                    {
-                        $keys = $subarray;
-                        return $keys;
-                    }
-                }
+                return $array;
             }
 
             $data = data_send();
@@ -93,15 +70,20 @@ class WalletController extends Controller
                 }
             }
 
-            if($data != null){
+            if($data != null){  
             $words = explode(" ", $data[2]);
+            $data[4] = $data[3];
             $data[3] = $data[2];
             $data[2] = $words;
             
+
+
             $private_key = $data[1];
+            $address = $data[4];
             $hash_login = hash('sha256', $data[0]);
             Session::put('_token_user', $hash_login);
             Session::put('private_key' , $private_key);
+            Session::put('address', $address);
             return view('wallet/wallet', compact('data', 'create_wallet'));
             }
 
@@ -126,13 +108,15 @@ class WalletController extends Controller
         $_token_user_session = Session::get('_token_user');
         $_token_user_form = $request->_token_user;
         $private_key = Session::get('private_key');
+        $address = Session::get('address');
 
         if($_token_user_session == $_token_user_form)
         {   
             $token_user = hash('sha256', $_token_user_session.$_token_user_form);
             Wallet::create([
                 'login' => $token_user,
-                'private_key' => $private_key
+                'private_key' => $private_key,
+                'address' => $address,
             ]);
         }
         

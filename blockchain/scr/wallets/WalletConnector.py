@@ -9,7 +9,8 @@ class WalletConnector():
         file = open("C:/OpenServer/domains/test/blockchain/data/data.txt", "a")
         file.write(f'{login}\n')
         file.write(f'{data[0]}\n')
-        file.write(f'{data[1]}\n\n')
+        file.write(f'{data[1]}\n')
+        file.write(f'{data[2]}\n\n')
         file.close()
         return data
 
@@ -20,4 +21,3 @@ class WalletConnector():
         file.close()
         return 'succes'
 
-WalletConnector.delete_private_key(1)
