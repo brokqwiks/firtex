@@ -12,4 +12,8 @@
     <PackageReference Include="NBitcoin" Version="7.0.31" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="PoS\" />
+  </ItemGroup>
+
 </Project>

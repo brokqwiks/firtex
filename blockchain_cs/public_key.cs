@@ -1,5 +1,5 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using NBitcoin;
+using System;
 using System.Text;
 
 class PublicKey
@@ -11,21 +11,14 @@ class PublicKey
             // Преобразование приватного ключа из шестнадцатеричной строки
             byte[] privateKeyBytes = StringToByteArray(privateKeyHex);
 
-            // Создание объекта ECDSA
-            using (ECDsa ecdsa = ECDsa.Create())
-            {
-                // Установка параметров кривой и приватного ключа
-                ECParameters ecParameters = new ECParameters { Curve = ECCurve.NamedCurves.nistP256, D = privateKeyBytes };
-                ecdsa.ImportParameters(ecParameters);
+            // Создание объекта Key из частного ключа
+            Key privateKey = new Key(privateKeyBytes);
 
-                // Получение публичного ключа в формате байтов
-                byte[] publicKeyBytes = ecdsa.ExportSubjectPublicKeyInfo();
+            // Извлечение открытого ключа в виде массива байтов
+            byte[] publicKeyBytes = privateKey.PubKey.ToBytes();
 
-                // Преобразование публичного ключа в шестнадцатеричную строку
-                string publicKeyHex = BitConverter.ToString(publicKeyBytes).Replace("-", "").ToLower();
-
-                return publicKeyHex;
-            }
+            // Преобразование публичного ключа в шестнадцатеричную строку
+            return ByteArrayToString(publicKeyBytes);
         }
         catch (Exception ex)
         {
@@ -34,7 +27,16 @@ class PublicKey
         }
     }
 
-    // Вспомогательная функция для преобразования шестнадцатеричной строки в массив байтов
+    private static string ByteArrayToString(byte[] array)
+    {
+        StringBuilder hex = new StringBuilder(array.Length * 2);
+        foreach (byte b in array)
+        {
+            hex.AppendFormat("{0:x2}", b);
+        }
+        return hex.ToString();
+    }
+
     private static byte[] StringToByteArray(string hex)
     {
         int numberChars = hex.Length;
@@ -44,5 +46,13 @@ class PublicKey
             bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
         }
         return bytes;
+    }
+
+    public static byte[] GeneratePublicKeyBytes(byte[] privateKeyBytes)
+    {
+        Key key = new Key(privateKeyBytes);
+        PubKey publicKey = key.PubKey;
+
+        return publicKey.ToBytes();
     }
 }

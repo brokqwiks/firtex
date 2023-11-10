@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Linq;
 using System.Text;
 using NBitcoin;
@@ -32,4 +33,15 @@ class PrivateKey
         string maxPrivateKeyHex = "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364140";
         return String.Compare(private_key, maxPrivateKeyHex, StringComparison.OrdinalIgnoreCase) <= 0;
     }
+
+    public static byte[] GeneratePrivateKeyBytes(string mnemonic)
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] seed = Encoding.UTF8.GetBytes(mnemonic);
+            return sha256.ComputeHash(seed);
+        }
+    }
+
+
 }
