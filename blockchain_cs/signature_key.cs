@@ -18,4 +18,8 @@ class DigitalSignature
         return publicKey.Verify(new uint256(data), ecdsaSignature);
     }
 
+    public static string ConvertSignatureToHex(byte[] signature)
+    {
+        return BitConverter.ToString(signature).Replace("-", "").ToLower();
+    }
 }

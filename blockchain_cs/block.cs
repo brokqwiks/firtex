@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Security.Cryptography;
 
 public class Block
 {
@@ -17,6 +19,9 @@ public class Block
         writer.Write(Index);
         writer.Write(Timestamp.ToBinary());
         writer.Write(Data);
+        writer.Write(PreviousBlockHash);
+        writer.Write(BlockHash);
+        writer.Write(Signature_Key);
     }
 
     public void Deserialize(BinaryReader reader)
@@ -24,6 +29,9 @@ public class Block
         Index = reader.ReadInt32();
         Timestamp = DateTime.FromBinary(reader.ReadInt64());
         Data = reader.ReadString();
+        PreviousBlockHash = reader.ReadString();
+        BlockHash = reader.ReadString();
+        Signature_Key = reader.ReadString();
     }
 }
 
@@ -52,6 +60,11 @@ public class Blockchain
                 }
             }
         }
+        else
+        {
+            // Если файл не существует, создаем генезис-блок
+            CreateGenesisBlock();
+        }
     }
 
     public void SaveToFile()
@@ -65,9 +78,59 @@ public class Blockchain
         }
     }
 
+    public void ClearFile()
+    {
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+    }
 
-   public void ClearFile() { 
-       File.WriteAllText(filePath, string.Empty);
-   }
-   
+    public Block GetLastBlock()
+    {
+        if (blocks.Count > 0)
+        {
+            return blocks[blocks.Count - 1];
+        }
+        return null;
+    }
+
+    private void CreateGenesisBlock()
+    {
+        // Создаем генезис-блок
+        Block genesisBlock = new Block
+        {
+            Index = 0,
+            Timestamp = DateTime.Now,
+            Data = "Genesis Block",
+            PreviousBlockHash = string.Empty,
+            Signature_Key = "Genesis Signature"
+        };
+
+        // Вычисляем хэш и ключ подписи для генезис-блока
+        genesisBlock.BlockHash = CalculateBlockHash(genesisBlock);
+
+        // Добавляем генезис-блок в блокчейн
+        blocks.Add(genesisBlock);
+
+        // Сохраняем блокчейн в файл
+        SaveToFile();
+    }
+
+    public string CalculateBlockHash(Block block)
+    {
+        // Вы можете использовать любой алгоритм хэширования, например, SHA-256
+        // Здесь представлен пример с SHA-256
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            // Конвертируем блок в массив байтов для хэширования
+            byte[] blockBytes = Encoding.GetEncoding("ISO-8859-1").GetBytes($"{block.Index}-{block.Timestamp}-{block.Data}-{block.PreviousBlockHash}-{block.Signature_Key}");
+
+            // Вычисляем хэш
+            byte[] hashBytes = sha256.ComputeHash(blockBytes);
+
+            // Преобразуем хэш в строку
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+        }
+    }
 }
