@@ -1,0 +1,12 @@
+{
+    "block_0": {
+        "id": 0,
+        "hash_last_block": 1,
+        "method": "send"
+    },
+    "block_1": {
+        "id": 1,
+        "hash_last_block": 2,
+        "method": "swift"
+    }
+}

@@ -107,6 +107,19 @@
         </div>
     </div>
 
+    <div class="wallet-menu">
+        <div class="balance-menu">
+            <a href="" id="balance">0.00 FRTX</a>
+        </div>
+
+        <div class="address-menu">
+            <h1 class="wallet-text" id="address-text">Your Firtex Address</h1>
+            <div id="address-block">
+            <a href="@" id="address">{{$data_user_wallet['address']}}</a>
+            </div>
+        </div>
+    </div>
+
     <script src="{{asset('js/main.js')}}"></script>
 </body>
 </html>

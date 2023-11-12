@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "задача-sha256",
+      "appliesTo": "scr/sha256.cs",
+      "type": "launch"
+    }
+  ]
+}
