@@ -37,7 +37,7 @@ class PublicKey
         return hex.ToString();
     }
 
-    private static byte[] StringToByteArray(string hex)
+    public static byte[] StringToByteArray(string hex)
     {
         int numberChars = hex.Length;
         byte[] bytes = new byte[numberChars / 2];

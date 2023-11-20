@@ -43,5 +43,35 @@ class PrivateKey
         }
     }
 
+    public static byte[] GetPrivateKeyBytes(string privateKeyHash)
+    {
+        try
+        {
+            // Преобразование строки хэша в массив байтов
+            byte[] hashBytes = StringToByteArray(privateKeyHash);
+
+            // Добавьте дополнительные операции по вашему усмотрению,
+            // чтобы получить байты приватного ключа из хэша.
+            // Ниже просто преобразование хэша обратно в байты.
+
+            return hashBytes;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error getting private key bytes: {ex.Message}");
+            return null;
+        }
+    }
+
+    static byte[] StringToByteArray(string hex)
+    {
+        int length = hex.Length / 2;
+        byte[] bytes = new byte[length];
+        for (int i = 0; i < length; i++)
+        {
+            bytes[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+        }
+        return bytes;
+    }
 
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
 
 public class Block
 {
@@ -11,8 +12,8 @@ public class Block
     public string Data { get; set; }
     public string PreviousBlockHash { get; set; }
     public string BlockHash { get; set; }
+    public string PublicKey { get; set; }
     public string Signature_Key { get; set; }
-    
 
     public void Serialize(BinaryWriter writer)
     {
@@ -33,56 +34,65 @@ public class Block
         BlockHash = reader.ReadString();
         Signature_Key = reader.ReadString();
     }
+
+    public string GetBlockFileName()
+    {
+        return $"{Index}_block.dat";
+    }
 }
 
 public class Blockchain
 {
     public List<Block> blocks = new List<Block>();
-    private string filePath = "blockchain.dat";
+    private string folderPath = "blockchain_blocks";
 
     public void AddBlock(Block block)
     {
         blocks.Add(block);
-        SaveToFile();
+        SaveToFile(block);
     }
 
     public void LoadFromFile()
     {
-        if (File.Exists(filePath))
+        if (!Directory.Exists(folderPath))
         {
-            using (BinaryReader reader = new BinaryReader(File.OpenRead(filePath)))
+            Directory.CreateDirectory(folderPath);
+        }
+
+        DirectoryInfo directoryInfo = new DirectoryInfo(folderPath);
+        FileInfo[] files = directoryInfo.GetFiles("*.dat");
+
+        foreach (FileInfo file in files)
+        {
+            using (BinaryReader reader = new BinaryReader(File.OpenRead(file.FullName)))
             {
-                while (reader.BaseStream.Position < reader.BaseStream.Length)
-                {
-                    Block block = new Block();
-                    block.Deserialize(reader);
-                    blocks.Add(block);
-                }
+                Block block = new Block();
+                block.Deserialize(reader);
+                blocks.Add(block);
             }
         }
-        else
+
+        if (blocks.Count == 0)
         {
-            // Если файл не существует, создаем генезис-блок
+            // Если файлы не существуют, создаем генезис-блок
             CreateGenesisBlock();
         }
     }
 
-    public void SaveToFile()
+    private void SaveToFile(Block block)
     {
+        string filePath = Path.Combine(folderPath, block.GetBlockFileName());
         using (BinaryWriter writer = new BinaryWriter(File.Open(filePath, FileMode.Create)))
         {
-            foreach (Block block in blocks)
-            {
-                block.Serialize(writer);
-            }
+            block.Serialize(writer);
         }
     }
 
-    public void ClearFile()
+    public void ClearFiles()
     {
-        if (File.Exists(filePath))
+        if (Directory.Exists(folderPath))
         {
-            File.Delete(filePath);
+            Directory.Delete(folderPath, true);
         }
     }
 
@@ -113,24 +123,66 @@ public class Blockchain
         // Добавляем генезис-блок в блокчейн
         blocks.Add(genesisBlock);
 
-        // Сохраняем блокчейн в файл
-        SaveToFile();
+        // Сохраняем генезис-блок в файл
+        SaveToFile(genesisBlock);
     }
 
     public string CalculateBlockHash(Block block)
     {
-        // Вы можете использовать любой алгоритм хэширования, например, SHA-256
-        // Здесь представлен пример с SHA-256
         using (SHA256 sha256 = SHA256.Create())
         {
-            // Конвертируем блок в массив байтов для хэширования
             byte[] blockBytes = Encoding.GetEncoding("ISO-8859-1").GetBytes($"{block.Index}-{block.Timestamp}-{block.Data}-{block.PreviousBlockHash}-{block.Signature_Key}");
-
-            // Вычисляем хэш
             byte[] hashBytes = sha256.ComputeHash(blockBytes);
-
-            // Преобразуем хэш в строку
             return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
     }
+
+    public byte[] ComputeBlockHash(Block block)
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            // Сериализация блока в JSON
+            string blockJson = JsonConvert.SerializeObject(block);
+
+            // Преобразование строки в байты
+            byte[] blockBytes = Encoding.UTF8.GetBytes(blockJson);
+
+            // Преобразование строки в байты
+            byte[] signatureBytes = StringToByteArray(block.Signature_Key);
+
+            // Добавление байтов подписи к байтам блока перед вычислением хэша
+            byte[] dataToHash = new byte[blockBytes.Length + signatureBytes.Length];
+            Buffer.BlockCopy(blockBytes, 0, dataToHash, 0, blockBytes.Length);
+            Buffer.BlockCopy(signatureBytes, 0, dataToHash, blockBytes.Length, signatureBytes.Length);
+
+            // Вычисление хэша
+            return sha256.ComputeHash(dataToHash);
+        }
+    }
+
+    private byte[] StringToByteArray(string hex)
+    {
+        int length = hex.Length / 2;
+        byte[] bytes = new byte[length];
+        for (int i = 0; i < length; i++)
+        {
+            bytes[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+        }
+        return bytes;
+    }
 }
+
+public static class Helper
+{
+    public static byte[] StringToByteArray(string hex)
+    {
+        int length = hex.Length / 2;
+        byte[] bytes = new byte[length];
+        for (int i = 0; i < length; i++)
+        {
+            bytes[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+        }
+        return bytes;
+    }
+}
+

@@ -10,12 +10,17 @@ using NBitcoin.RPC;
 using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 class Program
 {
     static void Main(string[] args)
-    {
+    {   
+        Blockchain blockchain = new Blockchain();
+        blockchain.LoadFromFile();
+
         string address = Components.FindAddressConfig();
+        string[] data = Components.ReadWalletData(address);
         if (address == null )
         {
             Components.HomeGreeting();
@@ -49,6 +54,19 @@ class Program
                         Components.CreateWallet();
                     }
                     break;
+
+                case "send":
+                    Components.CreateTransaction(blockchain, data[1]);
+
+                    break;
+
+                case "clear blocks":
+                    blockchain.ClearFiles();
+                    break;
+
+                case "load blocks":
+                    Components.LoadBlocks(blockchain);
+                    break;
             }
         }
     }
@@ -67,79 +85,4 @@ class Program
     }
 }
 
-public class Components
-{
-    public static void HomeGreeting()
-    {
-        Console.WriteLine("Welcome to Firtex system. Log in to your wallet with a private key or create a new one.");
-    }
 
-    public static void WalletGreeting(string address)
-    {
-        Console.WriteLine($"Welcome to the Firtex system. You are currently in the wallet: {address}");
-    }
-
-    public static void SwapWalletMessage()
-    {
-        Console.WriteLine("You can navigate through an existing wallet on your device by using the address.");
-    }
-
-
-    public static void LoginInPrivateKey(string privateKey)
-    {
-        string publicKey = PublicKey.GeneratePublicKey(privateKey);
-        string address = AddressGenerator.GenerateReadableAddress(publicKey);
-
-        Exe.CreateCopyExe(address, address);
-        Exe.OpenCopyExe(address);
-    }
-
-    public static string FindAddressConfig()
-    {
-        string fileName = Exe.GetFileName();
-        string address = Config.FindAddressInConfigs(fileName);
-        return address;
-    }
-
-    public static bool FindExeToAddress(string address)
-    {
-        return Exe.FindExeToAddress(address);
-    }
-
-    public static void CreateWallet()
-    {
-        string mnemonic_phrase = MnemonicGenerator.generate_phrase();
-        if (mnemonic_phrase != null)
-        {
-           string privateKey = PrivateKey.generate_private_key(mnemonic_phrase);
-            if (privateKey != null)
-            {
-                    string publicKey = PublicKey.GeneratePublicKey(privateKey);
-                    if (publicKey != null)
-                    {
-                     string generate_address = AddressGenerator.GenerateReadableAddress(publicKey);
-                    if (generate_address != null)
-                    {
-                        string[] WalletData = {mnemonic_phrase, publicKey, generate_address};
-                        Console.WriteLine($"Your mnemonic phrase. Put her in a secret place. If you lose your wallet, you can restore it using this phrase.");
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(WalletData[0]);
-                        Console.ResetColor();
-
-                        Console.WriteLine();
-
-                        Console.WriteLine($"Your address is Firtex. You can communicate it to everyone. At this address, people will find your wallet and send resources there.");
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(WalletData[2]);
-                        Console.ResetColor();
-
-                        Console.WriteLine();
-
-                        Exe.CreateCopyExe(generate_address, generate_address);
-                        Exe.OpenCopyExe(generate_address);
-                    }
-                }
-            }
-        }
-    }
-}

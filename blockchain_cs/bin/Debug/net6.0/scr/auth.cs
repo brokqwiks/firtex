@@ -1,20 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
-using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Emit;
-using System.Security.Cryptography;
-using Org.BouncyCastle;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using NBitcoin;
-using Microsoft.Extensions.Configuration;
-using System.Runtime.CompilerServices;
-
-
-
+using System.Security.Cryptography;
 
 public class WalletData
 {
@@ -26,75 +13,103 @@ public class WalletData
 
 public class BinaryFileHandler
 {
-    private string filePath = "allUserData.dat";
-    public void RegisterWallet(WalletData WalletData)
+    private string walletsFolderPath = "wallets";
+
+    public BinaryFileHandler()
     {
+        // Проверяем существование папки "wallets" и создаем ее, если она отсутствует
+        if (!Directory.Exists(walletsFolderPath))
+        {
+            Directory.CreateDirectory(walletsFolderPath);
+        }
+    }
+
+    public void RegisterWallet(WalletData walletData)
+    {
+        string walletFilePath = Path.Combine(walletsFolderPath, $"{walletData.Address}.dat");
+
         try
         {
-            using (BinaryWriter writer = new BinaryWriter(File.Open(filePath, FileMode.Create)))
+            using (BinaryWriter writer = new BinaryWriter(File.Open(walletFilePath, FileMode.Create)))
             {
-                writer.Write(WalletData.Address);
+                writer.Write(walletData.Address);
 
-                string PrivateKeyHex = Sha256.ComputeSHA256Hash(WalletData.PrivateKey);
-                string PublicKeyHex = Sha256.ComputeSHA256Hash(WalletData.PublicKey);
-                writer.Write(PrivateKeyHex);
-                writer.Write(PublicKeyHex);
-                writer.Write(WalletData.SignatureKey);
-                writer.Write("\n");
+                string privateKeyHex = ComputeSHA256Hash(walletData.PrivateKey);
+                string publicKeyHex = ComputeSHA256Hash(walletData.PublicKey);
+
+                writer.Write(privateKeyHex);
+                writer.Write(publicKeyHex);
+                writer.Write(walletData.SignatureKey);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка при записи в бинарный файл: {ex.Message}");
+            Console.WriteLine($"Error writing to binary file: {ex.Message}");
         }
     }
 
-    public Dictionary<string, string> ReadWalletData()
+    public Dictionary<string, string> ReadWalletData(string address)
     {
-        Dictionary<string, string> WalletDataDictionary = new Dictionary<string, string>();
+        string walletFilePath = Path.Combine(walletsFolderPath, $"{address}.dat");
 
-        if (File.Exists(filePath))
+        if (File.Exists(walletFilePath))
         {
-            using (BinaryReader reader = new BinaryReader(File.OpenRead(filePath)))
+            try
             {
-                while (reader.BaseStream.Position < reader.BaseStream.Length)
+                using (BinaryReader reader = new BinaryReader(File.OpenRead(walletFilePath)))
                 {
-                    // Пропускаем разделитель, если это не начало файла
-                    if (reader.BaseStream.Position != 0)
-                    {
-                        reader.ReadString(); // Пропускаем "\n"
-                    }
-
-                    // Читаем данные пользователя
-                    string Address = reader.ReadString();
-                    string PrivateKey = reader.ReadString();
-                    string PublicKey = reader.ReadString();
-                    string SignatureKey = reader.ReadString();
+                    // Читаем данные кошелька
+                    string savedAddress = reader.ReadString();
+                    string privateKey = reader.ReadString();
+                    string publicKey = reader.ReadString();
+                    string signatureKey = reader.ReadString();
 
                     // Добавляем данные в словарь
-                    WalletDataDictionary.Add("Address", Address);
-                    WalletDataDictionary.Add("PrivateKey", PrivateKey);
-                    WalletDataDictionary.Add("PublicKey", PublicKey);
-                    WalletDataDictionary.Add("Signature", SignatureKey);
-                    return WalletDataDictionary;
+                    Dictionary<string, string> walletDataDictionary = new Dictionary<string, string>
+                {
+                    { "Address", savedAddress },
+                    { "PrivateKey", privateKey },
+                    { "PublicKey", publicKey },
+                    { "Signature", signatureKey }
+                };
+
+                    return walletDataDictionary;
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading wallet data: {ex.Message}");
+            }
         }
+
         return null;
     }
 
-    public void ClearFile()
+    public void ClearWalletFile(string address)
     {
+        string walletFilePath = Path.Combine(walletsFolderPath, $"{address}.dat");
+
         try
         {
-            File.Delete(filePath);
+            if (File.Exists(walletFilePath))
+            {
+                File.Delete(walletFilePath);
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка при удалении бинарного файла: {ex.Message}");
+            Console.WriteLine($"Error deleting wallet file: {ex.Message}");
         }
     }
 
-
-
+    // Метод для вычисления SHA-256 хэша
+    private string ComputeSHA256Hash(string rawData)
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] bytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(rawData));
+            return BitConverter.ToString(bytes).Replace("-", "").ToLower();
+        }
+    }
 }
+
