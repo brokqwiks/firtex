@@ -8,7 +8,6 @@ public class WalletData
     public string Address { get; set; }
     public string PrivateKey { get; set; }
     public string PublicKey { get; set; }
-    public string SignatureKey { get; set; }
 }
 
 public class BinaryFileHandler
@@ -34,12 +33,11 @@ public class BinaryFileHandler
             {
                 writer.Write(walletData.Address);
 
-                string privateKeyHex = ComputeSHA256Hash(walletData.PrivateKey);
-                string publicKeyHex = ComputeSHA256Hash(walletData.PublicKey);
+                string privateKeyHex = walletData.PrivateKey;
+                string publicKeyHex = walletData.PublicKey;
 
                 writer.Write(privateKeyHex);
                 writer.Write(publicKeyHex);
-                writer.Write(walletData.SignatureKey);
             }
         }
         catch (Exception ex)

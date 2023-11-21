@@ -7,6 +7,8 @@ using System.Security.Cryptography;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.NetworkInformation;
+using System.Runtime.Intrinsics.Arm;
+using System.Diagnostics;
 
 public class Components
 {
@@ -77,30 +79,20 @@ public class Components
 
                         Console.WriteLine();
 
-                        byte[] privateKeyBytes = PrivateKey.GeneratePrivateKeyBytes(privateKey);
-                        byte[] addressBytes = Encoding.UTF8.GetBytes(generate_address);
+                        // Подпишите хэш
 
-                        using (SHA256 sha256 = SHA256.Create())
+                        WalletData walletData = new WalletData
                         {
-                            byte[] hash = sha256.ComputeHash(addressBytes);
+                            Address = generate_address,
+                            PrivateKey = privateKey,
+                            PublicKey = publicKey,
+                        };
 
-                            // Подпишите хэш
-                            byte[] signature = DigitalSignature.SignData(hash, privateKeyBytes);
-                            string signatureHex = DigitalSignature.ConvertSignatureToHex(signature);
-
-                            WalletData walletData = new WalletData
-                            {
-                                Address = generate_address,
-                                PrivateKey = privateKey,
-                                PublicKey = publicKey,
-                                SignatureKey = signatureHex,
-                            };
-
-                            fileHandler.RegisterWallet(walletData);
-
-                        }
+                        fileHandler.RegisterWallet(walletData);
 
                         Exe.CreateCopyExe(generate_address, generate_address);
+                        Console.WriteLine(privateKey);
+                        Console.WriteLine(publicKey);
                         Exe.OpenCopyExe(generate_address);
                     }
                 }
@@ -110,69 +102,60 @@ public class Components
 
     public static string[] ReadWalletData(string address)
     {
-        BinaryFileHandler fileHandler = new BinaryFileHandler();
-        Dictionary<string, string> readData = fileHandler.ReadWalletData(address);
+        string walletFilePath = Path.Combine("wallets" ,$"{address}.dat");
 
-        if (readData != null)
+        if (File.Exists(walletFilePath))
         {
-            Console.WriteLine("Wallet Data Read Successfully");
-
-            // Создаем массив строк для хранения данных
-            List<string> result = new List<string>();
-
-            foreach (var entry in readData)
+            try
             {
-                // Добавляем каждую пару ключ-значение в массив строк
-                result.Add($"{entry.Value}");
+                using (BinaryReader reader = new BinaryReader(File.OpenRead(walletFilePath)))
+                {
+                    // Читаем данные кошелька
+                    string savedAddress = reader.ReadString();
+                    string privateKey = reader.ReadString();
+                    string publicKey = reader.ReadString();
+
+                    // Создаем массив строк с данными кошелька
+                    string[] walletDataArray = new string[]
+                    {
+                    savedAddress,
+                    privateKey,
+                    publicKey,
+                    };
+
+                    return walletDataArray;
+                }
             }
-
-            // Возвращаем массив строк
-            return result.ToArray();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading wallet data: {ex.Message}");
+            }
         }
-        else
-        {
-            // Возвращаем пустой массив строк в случае ошибки
-            return new string[0];
-        }
-    }
-    
-    public static byte[] CreateSignatureBytes(string data, string privateKeyHex)
-    {
-        byte[] privateKeyBytes = PrivateKey.GeneratePrivateKeyBytes(privateKeyHex);
-        byte[] publicKeyBytes = PublicKey.GeneratePublicKeyBytes(privateKeyBytes);
-        byte[] dataBytes = Encoding.UTF8.GetBytes(data);    
-        byte[] signatureBytes = DigitalSignature.SignData(dataBytes, privateKeyBytes);
 
-        return signatureBytes;
-    }
-
-    public static string ConvertSignatureToHex(byte[] SignatureBytes)
-    {
-        if (SignatureBytes != null)
-        {
-            return DigitalSignature.ConvertSignatureToHex(SignatureBytes);
-        }
         return null;
     }
 
-    public static bool VerifySignatureBytes(string data, byte[] signatureBytes, string publicKey)
+    public static byte[] CreateSignature(string privateKey, string data)
     {
-        byte[] publicKeyBytes = PublicKey.StringToByteArray(publicKey);
         byte[] dataBytes = Encoding.UTF8.GetBytes(data);
-        bool verifed = DigitalSignature.VerifySignature(dataBytes, signatureBytes, publicKeyBytes);
+        byte[] privateKeyBytes = PrivateKey.GetPrivateKeyBytes(privateKey);
+        byte[] signature = DigitalSignature.SignData(dataBytes, privateKeyBytes);
 
+        return signature;
+    }
+
+    public static bool VerifySignature(string publicKey, string data, byte[] signature)
+    {
+        byte[] dataBytes = Encoding.UTF8.GetBytes(data);
+        byte[] publicKeyBytes = PublicKey.StringToByteArray(publicKey);
+        bool verifed = DigitalSignature.VerifySignature(dataBytes,signature,publicKeyBytes);
         return verifed;
     }
 
-    public static bool VerifySignatureHex(string data, string signatureHex, string publicKey)
+    public static string ConvertSignatureToHex(byte[] signature)
     {
-        byte[] publicKeyBytes = PublicKey.StringToByteArray(publicKey);
-        byte[] dataBytes = Encoding.UTF8.GetBytes(data);
-        byte[] signatureBytes = DigitalSignature.HexStringToByteArray(signatureHex);
-
-        bool verifed = DigitalSignature.VerifySignature(dataBytes, signatureBytes, publicKeyBytes);
-
-        return verifed;
+        string signatureHex = DigitalSignature.ConvertSignatureToHex(signature);
+        return signatureHex;
     }
 
     public static void CreateTransaction(Blockchain blockchain, string privateKeyHex)
@@ -186,43 +169,40 @@ public class Components
         {
             Console.WriteLine($"How many coins do you want to send to the address {AddressToSend}?");
             string ManyCoins = Console.ReadLine();
-            if( ManyCoins != null )
+            if (ManyCoins != null)
             {
                 Console.WriteLine($"Confirm the transaction of transferring {ManyCoins} coins to the address {AddressToSend}. Send Y if you confirm.");
-                if(Console.ReadLine() == "Y")
+                if (Console.ReadLine() == "Y")
                 {
                     string transactionData = $"{address} sent {ManyCoins} coins to {AddressToSend}";
 
-                    byte[] signatureBytes = CreateSignatureBytes(transactionData, privateKeyHex);
-                    string signatureHex = ConvertSignatureToHex(signatureBytes);
+                    byte[] signature = CreateSignature(privateKeyHex, transactionData);
+                    string signatureHex = ConvertSignatureToHex(signature);
+                    bool verifySignature = VerifySignature(publicKeyHex, transactionData, signature);
+                    if( verifySignature )
+                    {
+                        Block lastblock = blockchain.GetLastBlock();
 
-                    Block lastBlock = blockchain.GetLastBlock();
+                        Block newblock = new Block
+                        {
+                            Index = lastblock.Index + 1,
+                            Timestamp = DateTime.Now,
+                            Data = transactionData,
+                            PreviousBlockHash = lastblock.BlockHash,
+                            PublicKey = publicKeyHex,
+                            Signature_Key = signatureHex // Замените на ваш приватный ключ
+                        };
 
-                    Block newBlock = new Block
-                     {
-                         Index = lastBlock.Index + 1,
-                         Timestamp = DateTime.Now,
-                         Data = transactionData,
-                         PreviousBlockHash = lastBlock.BlockHash,
-                         PublicKey = publicKeyHex,
-                         Signature_Key = signatureHex // Замените на ваш приватный ключ
-                     };
-
-                      newBlock.BlockHash = blockchain.CalculateBlockHash(newBlock);
-
-                      // Добавление нового блока в блокчейн
-                      blockchain.AddBlock(newBlock);
-
-                     Console.WriteLine("The transaction was completed successfully.");
+                        newblock.BlockHash = blockchain.CalculateBlockHash(newblock);
+                        blockchain.AddBlock(newblock);
+                        Console.WriteLine("The transaction was completed successfully.");
+                        Console.WriteLine(verifySignature);
                     }
-                }
-                else
-                {
-                    Console.WriteLine("The transaction was successfully canceled.");
-                    return;
+                    else { Console.WriteLine("Error"); }
                 }
             }
         }
+    }
 
     public static void LoadBlocks(Blockchain blockchain)
     {
@@ -238,4 +218,5 @@ public class Components
             Console.WriteLine();
         }
     }
+
 }
