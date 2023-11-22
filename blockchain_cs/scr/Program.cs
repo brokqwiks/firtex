@@ -71,6 +71,10 @@ class Program
                 case "balance":
                     Components.GetBalance(blockchain, address);
                     break;
+
+                case "transactions":
+                    Components.TransactionsInfo(blockchain, address);
+                    break;
             }
         }
     }

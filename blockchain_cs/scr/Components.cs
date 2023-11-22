@@ -255,4 +255,28 @@ public class Components
         }
         Console.WriteLine($"Balance for address {address}: {balance}");
     }
+
+    public static void TransactionsInfo(Blockchain blockchain,string address)
+    {
+        int transactionIndex = 0;
+        foreach (var block in blockchain.blocks)
+        {
+            if(block.AddressToSend == address)
+            {
+                transactionIndex++;
+                Console.WriteLine($"Transaction: {transactionIndex}");
+                Console.WriteLine($"{block.AddressSender} -> {block.AddressToSend}");
+                Console.WriteLine($"+ {block.Coins}");
+            }
+            if (block.AddressSender == address)
+            {
+                transactionIndex++;
+                Console.WriteLine();
+                Console.WriteLine($"Transaction: {transactionIndex}");
+                Console.WriteLine($"{block.AddressSender} -> {block.AddressToSend}");
+                Console.WriteLine($"- {block.Coins} Firtex Coins");
+                Console.WriteLine();
+            }
+        }
+    }
 }
