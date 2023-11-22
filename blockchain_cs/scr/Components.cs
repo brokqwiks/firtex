@@ -9,6 +9,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net.NetworkInformation;
 using System.Runtime.Intrinsics.Arm;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 public class Components
 {
@@ -79,7 +80,6 @@ public class Components
 
                         Console.WriteLine();
 
-                        // Подпишите хэш
 
                         WalletData walletData = new WalletData
                         {
@@ -102,7 +102,7 @@ public class Components
 
     public static string[] ReadWalletData(string address)
     {
-        string walletFilePath = Path.Combine("wallets" ,$"{address}.dat");
+        string walletFilePath = Path.Combine("wallets", $"{address}.dat");
 
         if (File.Exists(walletFilePath))
         {
@@ -148,7 +148,7 @@ public class Components
     {
         byte[] dataBytes = Encoding.UTF8.GetBytes(data);
         byte[] publicKeyBytes = PublicKey.StringToByteArray(publicKey);
-        bool verifed = DigitalSignature.VerifySignature(dataBytes,signature,publicKeyBytes);
+        bool verifed = DigitalSignature.VerifySignature(dataBytes, signature, publicKeyBytes);
         return verifed;
     }
 
@@ -174,12 +174,12 @@ public class Components
                 Console.WriteLine($"Confirm the transaction of transferring {ManyCoins} coins to the address {AddressToSend}. Send Y if you confirm.");
                 if (Console.ReadLine() == "Y")
                 {
-                    string transactionData = $"{address} sent {ManyCoins} coins to {AddressToSend}";
+                    string transactionData = $"{address} sent {ManyCoins} {AddressToSend}";
 
                     byte[] signature = CreateSignature(privateKeyHex, transactionData);
                     string signatureHex = ConvertSignatureToHex(signature);
                     bool verifySignature = VerifySignature(publicKeyHex, transactionData, signature);
-                    if( verifySignature )
+                    if (verifySignature)
                     {
                         Block lastblock = blockchain.GetLastBlock();
 
@@ -190,7 +190,11 @@ public class Components
                             Data = transactionData,
                             PreviousBlockHash = lastblock.BlockHash,
                             PublicKey = publicKeyHex,
-                            Signature_Key = signatureHex // Замените на ваш приватный ключ
+                            Signature_Key = signatureHex,
+                            AddressSender = address,
+                            AddressToSend = AddressToSend,
+                            Coins = ManyCoins,
+
                         };
 
                         newblock.BlockHash = blockchain.CalculateBlockHash(newblock);
@@ -215,8 +219,40 @@ public class Components
             Console.WriteLine($"  Block Hash: {blk.BlockHash}");
             Console.WriteLine($"  Public Key: {blk.PublicKey}");
             Console.WriteLine($"  Signature Key: {blk.Signature_Key}");
+            Console.WriteLine($"  AddressSender: {blk.AddressSender}");
+            Console.WriteLine($"  AddressToSend: {blk.AddressToSend}");
+            Console.WriteLine($"  Coins: {blk.Coins}");
             Console.WriteLine();
         }
     }
 
+    public static void GetBalance(Blockchain blockchain, string address)
+    {
+        decimal balance = 0;
+
+        foreach (var block in blockchain.blocks)
+        {
+            if(block.AddressToSend == address)
+            {
+                string signatureHex = block.Signature_Key;
+                byte[] signature = DigitalSignature.HexStringToByteArray(signatureHex);
+                bool verifysignature = VerifySignature(block.PublicKey, block.Data, signature);
+                if (verifysignature)
+                {
+                    balance += int.Parse(block.Coins);
+                }
+            }
+            if(block.AddressSender == address)
+            {
+                string signatureHex = block.Signature_Key;
+                byte[] signature = DigitalSignature.HexStringToByteArray(signatureHex);
+                bool verifysignature = VerifySignature(block.PublicKey, block.Data, signature);
+                if (verifysignature)
+                {
+                    balance -= int.Parse(block.Coins);
+                }
+            }
+        }
+        Console.WriteLine($"Balance for address {address}: {balance}");
+    }
 }

@@ -14,6 +14,9 @@ public class Block
     public string BlockHash { get; set; }
     public string PublicKey { get; set; }
     public string Signature_Key { get; set; }
+    public string AddressSender { get; set; }
+    public string AddressToSend { get; set; }
+    public string Coins { get; set; }
 
     public void Serialize(BinaryWriter writer)
     {
@@ -22,7 +25,11 @@ public class Block
         writer.Write(Data);
         writer.Write(PreviousBlockHash);
         writer.Write(BlockHash);
+        writer.Write(PublicKey);
         writer.Write(Signature_Key);
+        writer.Write(AddressSender);
+        writer.Write(AddressToSend);
+        writer.Write(Coins);
     }
 
     public void Deserialize(BinaryReader reader)
@@ -32,7 +39,11 @@ public class Block
         Data = reader.ReadString();
         PreviousBlockHash = reader.ReadString();
         BlockHash = reader.ReadString();
+        PublicKey = reader.ReadString();
         Signature_Key = reader.ReadString();
+        AddressSender = reader.ReadString(); //
+        AddressToSend = reader.ReadString();
+        Coins = reader.ReadString();
     }
 
     public string GetBlockFileName()
@@ -114,7 +125,11 @@ public class Blockchain
             Timestamp = DateTime.Now,
             Data = "Genesis Block",
             PreviousBlockHash = string.Empty,
-            Signature_Key = "Genesis Signature"
+            Signature_Key = "Genesis Signature",
+            PublicKey = "Genesis Key",
+            AddressSender = string.Empty,
+            AddressToSend = string.Empty,
+            Coins = string.Empty,
         };
 
         // Вычисляем хэш и ключ подписи для генезис-блока
@@ -170,6 +185,8 @@ public class Blockchain
         }
         return bytes;
     }
+
+   
 }
 
 public static class Helper

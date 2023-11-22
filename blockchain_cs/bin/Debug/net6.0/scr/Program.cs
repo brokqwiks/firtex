@@ -67,6 +67,10 @@ class Program
                 case "load blocks":
                     Components.LoadBlocks(blockchain);
                     break;
+
+                case "balance":
+                    Components.GetBalance(blockchain, address);
+                    break;
             }
         }
     }
