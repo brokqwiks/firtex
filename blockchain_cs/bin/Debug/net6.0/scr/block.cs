@@ -57,6 +57,7 @@ public class Blockchain
     public List<Block> blocks = new List<Block>();
     private string folderPath = "blockchain_blocks";
 
+   
     public void AddBlock(Block block)
     {
         blocks.Add(block);

@@ -49,6 +49,18 @@
               "target": "Package",
               "version": "[2.2.1, )"
             },
+            "LibZeroTier": {
+              "target": "Package",
+              "version": "[1.0.8, )"
+            },
+            "Microsoft.AspNetCore.Hosting": {
+              "target": "Package",
+              "version": "[2.2.7, )"
+            },
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
             "Microsoft.CodeAnalysis.CSharp": {
               "target": "Package",
               "version": "[4.7.0, )"
@@ -72,6 +84,14 @@
             "System.Runtime": {
               "target": "Package",
               "version": "[4.3.1, )"
+            },
+            "WebSocketSharp-netstandard": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "ZeroTier.Sockets": {
+              "target": "Package",
+              "version": "[1.8.4, )"
             }
           },
           "imports": [

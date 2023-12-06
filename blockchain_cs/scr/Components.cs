@@ -10,6 +10,8 @@ using System.Net.NetworkInformation;
 using System.Runtime.Intrinsics.Arm;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using ZeroTier;
+using System.Net.Sockets;
 
 public class Components
 {
@@ -279,4 +281,50 @@ public class Components
             }
         }
     }
+
+    public static bool ConnectFirtexNetwork()
+    {
+        // Создаем процесс для выполнения команды
+        Process process = new Process();
+        ProcessStartInfo startInfo = new ProcessStartInfo();
+        string command = "zerotier-cli join b15644912e382a70";
+
+        // Указываем, что используется командная оболочка (cmd.exe)
+        startInfo.FileName = "cmd.exe";
+
+        // Указываем параметры командной строки
+        startInfo.Arguments = $"/c {command}"; // Используем /c для выполнения команды и закрытия окна после завершения
+
+        // Настраиваем процесс
+        startInfo.RedirectStandardOutput = true;
+        startInfo.UseShellExecute = false;
+        startInfo.CreateNoWindow = true;
+
+        process.StartInfo = startInfo;
+
+        // Запускаем процесс
+        process.Start();
+
+        // Читаем вывод команды
+        string output = process.StandardOutput.ReadToEnd();
+        if (output.Contains("200 join OK"))
+        {
+            Console.WriteLine("Successful network connection.");
+            process.WaitForExit();
+
+            return true;
+        }
+        else
+        {
+            Console.WriteLine("Не удалось подключиться к сети.");
+            process.WaitForExit();
+            return false;
+        }
+    }
+
+    public static void ErrorConnectFirtexNetwork()
+    {
+        Console.WriteLine("An error occurred while connecting to the blockchain network. Try again by restarting the application.");
+    }
 }
+
