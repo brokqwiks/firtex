@@ -8,16 +8,12 @@ class PublicKey
     {
         try
         {
-            // Преобразование приватного ключа из шестнадцатеричной строки
             byte[] privateKeyBytes = StringToByteArray(privateKeyHex);
 
-            // Создание объекта Key из частного ключа
             Key privateKey = new Key(privateKeyBytes);
 
-            // Извлечение открытого ключа в виде массива байтов
             byte[] publicKeyBytes = privateKey.PubKey.ToBytes();
 
-            // Преобразование публичного ключа в шестнадцатеричную строку
             return ByteArrayToString(publicKeyBytes);
         }
         catch (Exception ex)

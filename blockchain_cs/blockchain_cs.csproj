@@ -8,6 +8,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="app\**" />
+    <Compile Remove="PoS\**" />
+    <EmbeddedResource Remove="app\**" />
+    <EmbeddedResource Remove="PoS\**" />
+    <None Remove="app\**" />
+    <None Remove="PoS\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\AddressInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\Constants.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\Event.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\example.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\MulticastInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\NetworkInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\NetworkStream.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\Node.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\NodeInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\PeerInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\RouteInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\Socket.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\SocketException.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BouncyCastle" Version="1.8.9" />
     <PackageReference Include="BouncyCastle.NetCore" Version="2.2.1" />
     <PackageReference Include="LibZeroTier" Version="1.0.8" />
@@ -24,11 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="PoS\" />
-    <Folder Include="app\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="scr\address.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
@@ -36,6 +56,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Update="scr\block.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\cfg\configs.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Update="scr\phrase.cs">
@@ -60,6 +83,12 @@
 
   <ItemGroup>
       <Reference Include="System.Private.CoreLib" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="libs\phrase_libs\firtex_1010.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 

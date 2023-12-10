@@ -16,4 +16,4 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = blockchain_cs
-build_property.ProjectDir = C:\OpenServer\domains\firtex\blockchain_cs\
+build_property.ProjectDir = C:\OpenServer\domains\firtex\firtex\blockchain_cs\

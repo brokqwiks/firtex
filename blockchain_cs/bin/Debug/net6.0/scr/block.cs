@@ -86,7 +86,6 @@ public class Blockchain
 
         if (blocks.Count == 0)
         {
-            // Если файлы не существуют, создаем генезис-блок
             CreateGenesisBlock();
         }
     }
@@ -119,7 +118,6 @@ public class Blockchain
 
     private void CreateGenesisBlock()
     {
-        // Создаем генезис-блок
         Block genesisBlock = new Block
         {
             Index = 0,
@@ -133,13 +131,10 @@ public class Blockchain
             Coins = string.Empty,
         };
 
-        // Вычисляем хэш и ключ подписи для генезис-блока
         genesisBlock.BlockHash = CalculateBlockHash(genesisBlock);
 
-        // Добавляем генезис-блок в блокчейн
         blocks.Add(genesisBlock);
 
-        // Сохраняем генезис-блок в файл
         SaveToFile(genesisBlock);
     }
 
@@ -157,21 +152,16 @@ public class Blockchain
     {
         using (SHA256 sha256 = SHA256.Create())
         {
-            // Сериализация блока в JSON
             string blockJson = JsonConvert.SerializeObject(block);
 
-            // Преобразование строки в байты
             byte[] blockBytes = Encoding.UTF8.GetBytes(blockJson);
 
-            // Преобразование строки в байты
             byte[] signatureBytes = StringToByteArray(block.Signature_Key);
 
-            // Добавление байтов подписи к байтам блока перед вычислением хэша
             byte[] dataToHash = new byte[blockBytes.Length + signatureBytes.Length];
             Buffer.BlockCopy(blockBytes, 0, dataToHash, 0, blockBytes.Length);
             Buffer.BlockCopy(signatureBytes, 0, dataToHash, blockBytes.Length, signatureBytes.Length);
 
-            // Вычисление хэша
             return sha256.ComputeHash(dataToHash);
         }
     }

@@ -5,7 +5,7 @@ class MnemonicGenerator
 {
     public static string generate_phrase()
     {
-        string[] wordList = File.ReadAllLines("C:\\OpenServer\\domains\\firtex\\blockchain_cs\\libs\\phrase_libs\\firtex_1010.txt");
+        string[] wordList = File.ReadAllLines("libs\\phrase_libs\\firtex_1010.txt");
         
         int mnemonicLength = 12;
         Random random = new Random();

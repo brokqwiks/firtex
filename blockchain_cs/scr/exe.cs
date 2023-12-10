@@ -28,10 +28,8 @@ public class Exe
     public static void OpenCopyExe(string fileName)
     {
         string file = $"{fileName}.exe";
-        // Проверяем существование файла
         if (File.Exists(file))
         {
-            // Создаем процесс с настройками
             ProcessStartInfo psi = new ProcessStartInfo
             {
                 FileName = file,
@@ -39,11 +37,9 @@ public class Exe
                 RedirectStandardOutput = false,
                 CreateNoWindow = false
             };
-            // Запускаем новый exe файл
             Process.Start(psi);
 
             Thread.Sleep(600000);
-            // Завершаем текущий процесс (если нужно)
             Environment.Exit(0);
         }
         else
@@ -56,10 +52,8 @@ public class Exe
     {
         System.Diagnostics.Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
 
-        // Получаем полный путь к запускаемому exe-файлу
         string exeFilePath = currentProcess.MainModule.FileName;
 
-        // Извлекаем только имя файла без пути и расширения
         string exeFileName = Path.GetFileNameWithoutExtension(exeFilePath);
 
         if (exeFileName != null)
@@ -71,14 +65,11 @@ public class Exe
 
     public static bool FindExeToAddress(string address)
     {
-        // Завершаем существующий процесс, если он существует
 
         string exeFilePath = $"{AppDomain.CurrentDomain.BaseDirectory}{address}.exe";
 
-        // Проверяем существует ли exe-файл
         if (File.Exists(exeFilePath))
         {
-            // Найден exe-файл, запускаем его в новом окне cmd
             Console.WriteLine($"A wallet with the address {address} was found. Launch...");
 
             ProcessStartInfo psi = new ProcessStartInfo
@@ -99,12 +90,10 @@ public class Exe
             // Передаем команду ввода в cmd
             cmdProcess.StandardInput.WriteLine($"start {exeFilePath}");
 
-            // Завершаем функцию
             return true;
         }
         else
         {
-            // Файл не найден, выводим сообщение об ошибке
             Console.WriteLine("Error: exe-файл не найден.");
             return false;
         }
@@ -120,7 +109,7 @@ public class Exe
         foreach (Process process in processes)
         {
             process.Kill();
-            process.WaitForExit(); // Ждем, пока процесс завершится
+            process.WaitForExit(); 
         }
     }
 }

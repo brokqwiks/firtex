@@ -12,6 +12,8 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using ZeroTier;
 using System.Net.Sockets;
+using Newtonsoft.Json.Linq;
+using System.Runtime.ConstrainedExecution;
 
 public class Components
 {
@@ -234,7 +236,7 @@ public class Components
 
         foreach (var block in blockchain.blocks)
         {
-            if(block.AddressToSend == address)
+            if (block.AddressToSend == address)
             {
                 string signatureHex = block.Signature_Key;
                 byte[] signature = DigitalSignature.HexStringToByteArray(signatureHex);
@@ -244,7 +246,7 @@ public class Components
                     balance += int.Parse(block.Coins);
                 }
             }
-            if(block.AddressSender == address)
+            if (block.AddressSender == address)
             {
                 string signatureHex = block.Signature_Key;
                 byte[] signature = DigitalSignature.HexStringToByteArray(signatureHex);
@@ -255,76 +257,108 @@ public class Components
                 }
             }
         }
-        Console.WriteLine($"Balance for address {address}: {balance}");
+        Console.WriteLine($"Balance for {address}: {balance}");
     }
 
-    public static void TransactionsInfo(Blockchain blockchain,string address)
+    public static void TransactionsInfo(Blockchain blockchain, string address)
     {
         int transactionIndex = 0;
         foreach (var block in blockchain.blocks)
         {
-            if(block.AddressToSend == address)
+            if (block.AddressToSend == address)
             {
                 transactionIndex++;
-                Console.WriteLine($"Transaction: {transactionIndex}");
-                Console.WriteLine($"{block.AddressSender} -> {block.AddressToSend}");
+                 Console.WriteLine($"Transaction: {transactionIndex}");
+                   Console.WriteLine($"{block.AddressSender} -> {block.AddressToSend}");
                 Console.WriteLine($"+ {block.Coins}");
             }
             if (block.AddressSender == address)
             {
-                transactionIndex++;
+               transactionIndex++;
                 Console.WriteLine();
                 Console.WriteLine($"Transaction: {transactionIndex}");
                 Console.WriteLine($"{block.AddressSender} -> {block.AddressToSend}");
                 Console.WriteLine($"- {block.Coins} Firtex Coins");
                 Console.WriteLine();
-            }
+             }
         }
     }
 
-    public static bool ConnectFirtexNetwork()
+    public static bool ConnectFirtex()
     {
-        // Создаем процесс для выполнения команды
-        Process process = new Process();
-        ProcessStartInfo startInfo = new ProcessStartInfo();
-        string command = "zerotier-cli join b15644912e382a70";
-
-        // Указываем, что используется командная оболочка (cmd.exe)
-        startInfo.FileName = "cmd.exe";
-
-        // Указываем параметры командной строки
-        startInfo.Arguments = $"/c {command}"; // Используем /c для выполнения команды и закрытия окна после завершения
-
-        // Настраиваем процесс
-        startInfo.RedirectStandardOutput = true;
-        startInfo.UseShellExecute = false;
-        startInfo.CreateNoWindow = true;
-
-        process.StartInfo = startInfo;
-
-        // Запускаем процесс
-        process.Start();
-
-        // Читаем вывод команды
-        string output = process.StandardOutput.ReadToEnd();
-        if (output.Contains("200 join OK"))
+        if (FirtexNetwork.ConnectFirtexNetwork())
         {
             Console.WriteLine("Successful network connection.");
-            process.WaitForExit();
-
             return true;
         }
         else
         {
-            Console.WriteLine("Не удалось подключиться к сети.");
-            process.WaitForExit();
+            Console.WriteLine("Couldn't connect to the network");
             return false;
         }
     }
 
     public static void ErrorConnectFirtexNetwork()
     {
-        Console.WriteLine("An error occurred while connecting to the blockchain network. Try again by restarting the application.");
+         Console.WriteLine("An error occurred while connecting to the blockchain network. Try again by restarting the application.");
+    }
+
+    public static List<string> GetActiveNodeIPAddresses(string json)
+    {
+        JArray nodes = JArray.Parse(json);
+        if (nodes != null)
+        {
+            List<string> ipAddresses = nodes
+                .Where(node => node["lastOnline"] != null)
+                .SelectMany(node => node["config"]["ipAssignments"]
+                    .Values<string>()
+                    .Where(ip => ip.StartsWith("192.168.192.")))
+                .ToList();
+
+            return ipAddresses;
+        }
+        return null;
+    }
+
+    public static void GetIpNetwork()
+    {   
+        string testResponce = FirtexNetwork.TestResponceNetwork().Result;
+        string localIP = FirtexNetwork.GetLocalIpNetwork();
+        Console.WriteLine($"{localIP}");
+    }
+
+    public static void StartNodeServer()
+    {
+        string IpAddress = FirtexNetwork.GetLocalIpNetwork();
+        int Port = 9994;
+        Task.Run(() => FirtexNetwork.StartServer(IpAddress, Port));
+
+    }
+
+    public static void TestNodeConnection()
+    {
+        string[] activeAddresses = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
+        string activeAddress = FirtexNetwork.ConnectionActiveAddresses(activeAddresses);
+        bool testNode = FirtexNetwork.TestNodeServer(activeAddress, 9994);
+        Console.WriteLine(testNode);
+    }
+
+    public static void NodeActive()
+    {
+        string activeNodesResult = FirtexNetwork.GetActiveNodes().Result;
+        List<string> ipAddresses = Components.GetActiveNodeIPAddresses(activeNodesResult);
+
+        Console.WriteLine("IP addresses of active nodes:");
+        foreach (var ipAddress in ipAddresses)
+        {
+            Console.WriteLine(ipAddress);
+        }
+    }
+
+    public static void  TestResponse()
+    {
+        string testResponce = FirtexNetwork.TestResponceNetwork().Result;
+        Console.WriteLine(testResponce);
     }
 }
 

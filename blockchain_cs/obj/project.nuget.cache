@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "sfkyt4e71YY4QN7agh04gytcjDsEn8vUsEvpnXe53RPf4l/nCb4pSAR/gELsA7Gfsf18cAv9clLKi0IHar+VwQ==",
+  "dgSpecHash": "VJH2Cl1IdHsY2HKuabD5cuW1HLj3lYmU3RMyQLdlYy0kVcPkH7Gg/SXh+hhjGDzvPtc0ifxgw4A73kaENrXqdw==",
   "success": true,
-  "projectFilePath": "C:\\OpenServer\\domains\\firtex\\blockchain_cs\\blockchain_cs.csproj",
+  "projectFilePath": "C:\\OpenServer\\domains\\firtex\\firtex\\blockchain_cs\\blockchain_cs.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\MIX PC\\.nuget\\packages\\bouncycastle\\1.8.9\\bouncycastle.1.8.9.nupkg.sha512",
     "C:\\Users\\MIX PC\\.nuget\\packages\\bouncycastle.netcore\\2.2.1\\bouncycastle.netcore.2.2.1.nupkg.sha512",

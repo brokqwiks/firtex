@@ -16,7 +16,6 @@ public class BinaryFileHandler
 
     public BinaryFileHandler()
     {
-        // Проверяем существование папки "wallets" и создаем ее, если она отсутствует
         if (!Directory.Exists(walletsFolderPath))
         {
             Directory.CreateDirectory(walletsFolderPath);
@@ -56,13 +55,11 @@ public class BinaryFileHandler
             {
                 using (BinaryReader reader = new BinaryReader(File.OpenRead(walletFilePath)))
                 {
-                    // Читаем данные кошелька
                     string savedAddress = reader.ReadString();
                     string privateKey = reader.ReadString();
                     string publicKey = reader.ReadString();
                     string signatureKey = reader.ReadString();
 
-                    // Добавляем данные в словарь
                     Dictionary<string, string> walletDataDictionary = new Dictionary<string, string>
                 {
                     { "Address", savedAddress },
@@ -100,7 +97,6 @@ public class BinaryFileHandler
         }
     }
 
-    // Метод для вычисления SHA-256 хэша
     private string ComputeSHA256Hash(string rawData)
     {
         using (SHA256 sha256 = SHA256.Create())

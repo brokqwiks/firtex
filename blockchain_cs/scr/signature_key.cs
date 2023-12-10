@@ -9,7 +9,6 @@ class DigitalSignature
     {
         try
         {
-            // Хэширование данных с использованием SHA256
             using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] hash = sha256.ComputeHash(data);
@@ -31,7 +30,6 @@ class DigitalSignature
     {
         try
         {
-            // Хэширование данных с использованием SHA256
             using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] hash = sha256.ComputeHash(data);

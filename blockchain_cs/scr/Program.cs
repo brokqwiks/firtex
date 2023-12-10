@@ -16,17 +16,21 @@ using System.Net;
 using WebSocketSharp.Server;
 using WebSocketSharp;
 using WebSocketSharp.Server;
+using System.Threading.Tasks;
+using NBitcoin;
+
 class Program
 {
     static void Main(string[] args)
-    {   
+    {
         Blockchain blockchain = new Blockchain();
         blockchain.LoadFromFile();
 
         string address = Components.FindAddressConfig();
         string[] data = Components.ReadWalletData(address);
-        if (Components.ConnectFirtexNetwork() == true)
-        {
+        if (Components.ConnectFirtex())
+        {   
+            Components.StartNodeServer();
             if (address == null)
             {
                 Components.HomeGreeting();
@@ -34,6 +38,7 @@ class Program
             else
             {
                 Components.WalletGreeting(address);
+
             }
             while (true)
             {
@@ -54,7 +59,7 @@ class Program
                         }
                         break;
 
-                    case "create wallet":
+                    case "wallet -c":
                         if (address == null)
                         {
                             Components.CreateWallet();
@@ -66,24 +71,36 @@ class Program
 
                         break;
 
-                    case "clear blocks":
+                    case "clear -b":
                         blockchain.ClearFiles();
                         break;
 
-                    case "load blocks":
+                    case "load -b":
                         Components.LoadBlocks(blockchain);
                         break;
 
-                    case "balance":
+                    case "load -bl":
                         Components.GetBalance(blockchain, address);
                         break;
 
-                    case "transactions":
+                    case "load -t":
                         Components.TransactionsInfo(blockchain, address);
                         break;
 
-                    case "network -j":
-                        Components.ConnectFirtexNetwork();
+                    case "node -a":
+                        Components.NodeActive();
+                        break;
+
+                    case "test -r":
+                        Components.TestResponse();
+                        break;
+
+                    case "get -i":
+                        Components.GetIpNetwork();
+                        break;
+
+                    case "test -n":
+                        Components.TestNodeConnection();
                         break;
                 }
             }
@@ -93,7 +110,8 @@ class Program
             Components.ErrorConnectFirtexNetwork();
         }
     }
-        
+
+
 
     public static string ReadLine()
     {
