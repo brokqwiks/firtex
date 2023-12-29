@@ -327,11 +327,11 @@ public class Components
         Console.WriteLine($"{localIP}");
     }
 
-    public static void StartNodeServer()
+    public static void StartNodeServer(Blockchain blockchain)
     {
         string IpAddress = FirtexNetwork.GetLocalIpNetwork();
         int Port = 9994;
-        Task.Run(() => FirtexNetwork.StartServer(IpAddress, Port));
+        Task.Run(() => FirtexNetwork.StartServer(IpAddress, Port, blockchain));
 
     }
 
@@ -340,7 +340,7 @@ public class Components
         string[] activeAddresses = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
         string activeAddress = FirtexNetwork.ConnectionActiveAddresses(activeAddresses);
         bool testNode = FirtexNetwork.TestNodeServer(activeAddress, 9994);
-        Console.WriteLine(testNode);
+        Console.WriteLine($"The response from the node {activeAddress}: {testNode}");
     }
 
     public static void NodeActive()
@@ -355,10 +355,18 @@ public class Components
         }
     }
 
-    public static void  TestResponse()
+    public static void TestResponse()
     {
         string testResponce = FirtexNetwork.TestResponceNetwork().Result;
         Console.WriteLine(testResponce);
+    }
+
+    public static void LastBlockResponce(Blockchain blockchain) 
+    {
+        string[] activeNodes = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
+        string IpAddressNode = FirtexNetwork.ConnectionActiveAddresses(activeNodes);
+        bool LastBlockResponce = FirtexNetwork.GetLastBlockNode(IpAddressNode, blockchain);
+        Console.WriteLine(LastBlockResponce);
     }
 }
 

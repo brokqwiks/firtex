@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class Block
 {
@@ -44,6 +45,16 @@ public class Block
         AddressSender = reader.ReadString(); //
         AddressToSend = reader.ReadString();
         Coins = reader.ReadString();
+    }
+
+    public string CalculateBlockHash()
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] blockBytes = Encoding.GetEncoding("ISO-8859-1").GetBytes($"{Index}-{Timestamp}-{Data}-{PreviousBlockHash}-{Signature_Key}");
+            byte[] hashBytes = sha256.ComputeHash(blockBytes);
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+        }
     }
 
     public string GetBlockFileName()
@@ -156,11 +167,16 @@ public class Blockchain
 
             byte[] blockBytes = Encoding.UTF8.GetBytes(blockJson);
 
-            byte[] signatureBytes = StringToByteArray(block.Signature_Key);
+            byte[] signatureBytes = !string.IsNullOrEmpty(block.Signature_Key)
+                ? StringToByteArray(block.Signature_Key)
+                : new byte[0];
 
             byte[] dataToHash = new byte[blockBytes.Length + signatureBytes.Length];
             Buffer.BlockCopy(blockBytes, 0, dataToHash, 0, blockBytes.Length);
-            Buffer.BlockCopy(signatureBytes, 0, dataToHash, blockBytes.Length, signatureBytes.Length);
+            if (signatureBytes.Length > 0)
+            {
+                Buffer.BlockCopy(signatureBytes, 0, dataToHash, blockBytes.Length, signatureBytes.Length);
+            }
 
             return sha256.ComputeHash(dataToHash);
         }
@@ -177,7 +193,181 @@ public class Blockchain
         return bytes;
     }
 
-   
+    public static string SerializeBlockchainToJson(Blockchain blockchain)
+    {
+        try
+        {
+            // Создаем объект, который будет содержать информацию о блокчейне
+            JObject blockchainObject = new JObject();
+
+            // Сериализуем каждый блок в блокчейне
+            JArray blocksArray = new JArray();
+            foreach (var block in blockchain.blocks)
+            {
+                JObject blockObject = new JObject();
+                blockObject["Index"] = block.Index;
+                blockObject["Timestamp"] = block.Timestamp.ToString();
+                blockObject["Data"] = block.Data;
+                blockObject["PreviousBlockHash"] = block.PreviousBlockHash;
+                blockObject["BlockHash"] = block.BlockHash;
+                blockObject["PublicKey"] = block.PublicKey;
+                blockObject["Signature_Key"] = block.Signature_Key;
+                blockObject["AddressSender"] = block.AddressSender;
+                blockObject["AddressToSend"] = block.AddressToSend;
+                blockObject["Coins"] = block.Coins;
+
+                blocksArray.Add(blockObject);
+            }
+
+            // Добавляем массив блоков к объекту блокчейна
+            blockchainObject["Blocks"] = blocksArray;
+
+            // Сериализуем объект блокчейна в JSON
+            string jsonBlockchain = blockchainObject.ToString();
+
+            return jsonBlockchain;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return null;
+        }
+    }
+
+    public static string SerializeBlockToJson(Block block)
+    {
+        try
+        {
+            // Создаем объект, который будет содержать информацию о блоке
+            JObject blockObject = new JObject();
+
+            blockObject["Index"] = block.Index;
+            blockObject["Timestamp"] = block.Timestamp.ToString();
+            blockObject["Data"] = block.Data;
+            blockObject["PreviousBlockHash"] = block.PreviousBlockHash;
+            blockObject["BlockHash"] = block.BlockHash;
+            blockObject["PublicKey"] = block.PublicKey;
+            blockObject["Signature_Key"] = block.Signature_Key;
+            blockObject["AddressSender"] = block.AddressSender;
+            blockObject["AddressToSend"] = block.AddressToSend;
+            blockObject["Coins"] = block.Coins;
+
+            // Сериализуем объект блока в JSON
+            string jsonBlock = blockObject.ToString();
+
+            return jsonBlock;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return null;
+        }
+    }
+
+
+    public static Block DeserializeBlock(string blockJson)
+    {
+        try
+        {
+            JObject blockObject = JObject.Parse(blockJson);
+
+            Block block = new Block
+            {
+                Index = (int)blockObject["Index"],
+                Timestamp = DateTime.Parse((string)blockObject["Timestamp"]),
+                Data = (string)blockObject["Data"],
+                PreviousBlockHash = (string)blockObject["PreviousBlockHash"],
+                BlockHash = (string)blockObject["BlockHash"],
+                PublicKey = (string)blockObject["PublicKey"],
+                Signature_Key = (string)blockObject["Signature_Key"],
+                AddressSender = (string)blockObject["AddressSender"],
+                AddressToSend = (string)blockObject["AddressToSend"],
+                Coins = (string)blockObject["Coins"]
+            };
+
+            return block;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deserializing block: {ex.Message}");
+            return null;
+        }
+    }
+
+    public static string CombineBlockJsonArray(List<string> blockJsonArray)
+    {
+        try
+        {
+            // Создаем объект, который будет содержать информацию о блокчейне
+            JObject blockchainObject = new JObject();
+
+            // Сериализуем каждый JSON блока в массив
+            JArray blocksArray = new JArray();
+            foreach (var blockJson in blockJsonArray)
+            {
+                JObject blockObject = JObject.Parse(blockJson);
+                blocksArray.Add(blockObject);
+            }
+
+            // Добавляем массив блоков к объекту блокчейна
+            blockchainObject["Blocks"] = blocksArray;
+
+            // Сериализуем объект блокчейна в JSON
+            string jsonBlockchain = blockchainObject.ToString();
+
+            return jsonBlockchain;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return null;
+        }
+    }
+
+    public static List<Block> DeserializeBlocksFromJson(string jsonBlockchain)
+    {
+        try
+        {
+            List<Block> blocks = new List<Block>();
+
+            JObject blockchainObject = JObject.Parse(jsonBlockchain);
+            JArray blocksArray = (JArray)blockchainObject["Blocks"];
+
+            foreach (var blockObject in blocksArray)
+            {
+                Block block = new Block
+                {
+                    Index = (int)blockObject["Index"],
+                    Timestamp = DateTime.Parse((string)blockObject["Timestamp"]),
+                    Data = (string)blockObject["Data"],
+                    PreviousBlockHash = (string)blockObject["PreviousBlockHash"],
+                    BlockHash = (string)blockObject["BlockHash"],
+                    PublicKey = (string)blockObject["PublicKey"],
+                    Signature_Key = (string)blockObject["Signature_Key"],
+                    AddressSender = (string)blockObject["AddressSender"],
+                    AddressToSend = (string)blockObject["AddressToSend"],
+                    Coins = (string)blockObject["Coins"]
+                };
+
+                blocks.Add(block);
+            }
+
+            return blocks;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deserializing blocks from JSON: {ex.Message}");
+            return null;
+        }
+    }
+
+
+    public bool ContainsBlock(Block block)
+    {
+        // Проверяем, содержится ли блок в локальном блокчейне
+        return blocks.Any(b => b.Index == block.Index && b.BlockHash == block.BlockHash);
+    }
+
 }
 
 public static class Helper
