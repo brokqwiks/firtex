@@ -1,0 +1,107 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="app\**" />
+    <Compile Remove="PoS\**" />
+    <EmbeddedResource Remove="app\**" />
+    <EmbeddedResource Remove="PoS\**" />
+    <None Remove="app\**" />
+    <None Remove="PoS\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\AddressInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\Constants.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\Event.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\example.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\MulticastInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\NetworkInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\NetworkStream.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\Node.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\NodeInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\PeerInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\RouteInfo.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\Socket.cs" />
+    <None Remove="C:\Users\MIX PC\.nuget\packages\zerotier.sockets\1.8.4\contentFiles\cs\any\ZeroTier.Source.ReadOnly\SocketException.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle" Version="1.8.9" />
+    <PackageReference Include="BouncyCastle.NetCore" Version="2.2.1" />
+    <PackageReference Include="LibZeroTier" Version="1.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="NBitcoin" Version="7.0.31" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
+    <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
+    <PackageReference Include="ZeroTier.Sockets" Version="1.8.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="scr\address.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\auth.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\block.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\cfg\configs.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\cfg\data.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\Components.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\network.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\phrase.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\private_key.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\Program.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\public_key.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\server.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\sha__256.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="scr\signature_key.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+      <Reference Include="System.Private.CoreLib" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="libs\phrase_libs\firtex_1010.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
+</Project>
