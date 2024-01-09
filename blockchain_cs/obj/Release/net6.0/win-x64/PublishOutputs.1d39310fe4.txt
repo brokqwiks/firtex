@@ -1,2 +1,0 @@
-C:\OpenServer\domains\firtex\blockchain_cs\bin\Release\net6.0\win-x64\publish\blockchain_cs.pdb
-C:\OpenServer\domains\firtex\blockchain_cs\bin\Release\net6.0\win-x64\publish\blockchain_cs.exe
