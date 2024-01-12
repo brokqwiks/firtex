@@ -35,6 +35,7 @@ class Program
         {   
             Components.StartNodeServer(blockchain, session);
             Components.StartBlocksNode(blockchain, session);
+            Components.StartLastBlockNode(blockchain, session);
             if (address == null)
             {
                 Components.HomeGreeting();
@@ -136,6 +137,10 @@ class Program
                         Components.StartNodeServer(blockchain, session);
                         break;
 
+                    case "test -data -n":
+                        Dictionary<string, Dictionary<string, string>> blockPortsByIp = DataNetwork.GetAllBlockPortsByIp();
+                        Console.WriteLine(blockPortsByIp["192.168.192.209"]["MainPort"]);
+                        break;
                     
 
 

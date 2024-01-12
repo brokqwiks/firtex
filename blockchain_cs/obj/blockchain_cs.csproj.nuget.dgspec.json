@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\OpenServer\\domains\\firtex\\firtex\\blockchain_cs\\blockchain_cs.csproj": {}
+    "C:\\OpenServer\\domains\\firtex\\blockchain_cs\\blockchain_cs.csproj": {}
   },
   "projects": {
-    "C:\\OpenServer\\domains\\firtex\\firtex\\blockchain_cs\\blockchain_cs.csproj": {
+    "C:\\OpenServer\\domains\\firtex\\blockchain_cs\\blockchain_cs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\OpenServer\\domains\\firtex\\firtex\\blockchain_cs\\blockchain_cs.csproj",
+        "projectUniqueName": "C:\\OpenServer\\domains\\firtex\\blockchain_cs\\blockchain_cs.csproj",
         "projectName": "blockchain_cs",
-        "projectPath": "C:\\OpenServer\\domains\\firtex\\firtex\\blockchain_cs\\blockchain_cs.csproj",
+        "projectPath": "C:\\OpenServer\\domains\\firtex\\blockchain_cs\\blockchain_cs.csproj",
         "packagesPath": "C:\\Users\\MIX PC\\.nuget\\packages\\",
-        "outputPath": "C:\\OpenServer\\domains\\firtex\\firtex\\blockchain_cs\\obj\\",
+        "outputPath": "C:\\OpenServer\\domains\\firtex\\blockchain_cs\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\MIX PC\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -340,6 +340,12 @@ public class Components
         Task.Run(() => ServerFirtexNetwork.StartServer(IpAddress, blockchain, session, "Block"));
     }
 
+    public static void StartLastBlockNode(Blockchain blockchain, SessionNetwork session)
+    {
+        string IpAddress = FirtexNetwork.GetLocalIpNetwork();
+        Task.Run(() => ServerFirtexNetwork.StartServer(IpAddress, blockchain, session, "LastBlock"));
+    }
+
     public static void TestNodeConnection()
     {
         string[] activeAddresses = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
@@ -399,6 +405,17 @@ public class Components
         foreach (var item in dataSession)
         {
             Console.WriteLine(item);
+        }
+    }
+
+    public static void SyncincWithFirtexNetwork(Blockchain blockchain)
+    {
+        string[] ipAddress = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
+        string activeNode = FirtexNetwork.ConnectionActiveAddresses(ipAddress);
+        bool LastBlock = FirtexNetwork.GetLastBlockNode(activeNode, blockchain);
+        if (!LastBlock)
+        {
+            
         }
     }
 

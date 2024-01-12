@@ -185,42 +185,84 @@ public class DataNetwork
         }
     }
 
-    public static Dictionary<string, string> ReadDataFile(string name)
+    public static Dictionary<string, Dictionary<string, string>> GetAllBlockPortsByIp()
+    {
+        Dictionary<string, Dictionary<string, string>> blockPortsByIp = new Dictionary<string, Dictionary<string, string>>();
+
+        try
+        {
+            string dataFolderPath = "data";
+            string[] dataFiles = Directory.GetFiles(dataFolderPath);
+
+            foreach (string filePath in dataFiles)
+            {
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
+
+                // Проверяем, что файл начинается с "node_"
+                if (fileNameWithoutExtension.StartsWith("node_"))
+                {
+                    // Обрезаем префикс "node_"
+                    string ipAddress = fileNameWithoutExtension.Substring("node_".Length);
+
+                    Console.WriteLine(ipAddress);
+
+                    Dictionary<string, string> dataDictionary = ReadDataFile(fileNameWithoutExtension);
+
+                    // Создаем словарь для данного ipAddress, если его еще нет
+                    if (!blockPortsByIp.ContainsKey(ipAddress))
+                    {
+                        blockPortsByIp[ipAddress] = new Dictionary<string, string>();
+                    }
+
+                    // Добавляем данные в словарь
+                    foreach (var item in dataDictionary)
+                    {
+                        Console.WriteLine(item);
+                        blockPortsByIp[ipAddress][item.Key] = item.Value;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error getting BlockPorts by IP: {ex.Message}");
+        }
+
+        return blockPortsByIp;
+    }
+
+
+
+    public static Dictionary<string, string> ReadDataFile(string fileNameWithoutExtension)
     {
         Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
 
         try
         {
-            string filePath = $"data/node_{name}.dat";
+            string path = Path.Combine("data", $"{fileNameWithoutExtension}.dat");
 
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File '{filePath}' does not exist.");
-                return dataDictionary;
-            }
-
-            string[] lines = File.ReadAllLines(filePath);
+            string[] lines = File.ReadAllLines(path);
 
             foreach (string line in lines)
             {
-                string[] parts = line.Split(',');
+                string[] parts = line.Split(':');
 
                 if (parts.Length >= 2)
                 {
-                    string entryName = parts[0];
-                    string entryPort = parts[1];
+                    string entryName = parts[0].Trim();
+                    string entryValue = parts[1].Trim();
 
-                    dataDictionary[entryName] = entryPort;
+                    dataDictionary[entryName] = entryValue;
                 }
             }
-
-            return dataDictionary;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error reading data file: {ex.Message}");
-            return dataDictionary;
+            Console.WriteLine($"Error reading data file '{fileNameWithoutExtension}': {ex.Message}");
         }
+
+        return dataDictionary;
     }
+
 }
 
