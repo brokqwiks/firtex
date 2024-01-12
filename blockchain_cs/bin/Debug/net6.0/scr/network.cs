@@ -262,9 +262,8 @@ public class FirtexNetwork
         return null;
     }
 
-    public static bool GetLastBlockNode(string IpAddress, Blockchain blockchain)
+    public static bool GetLastBlockNode(string IpAddress, Blockchain blockchain, int port)
     {
-        int port = 9994;
         try
         {
             Block LastBlock = blockchain.GetLastBlock();
@@ -307,9 +306,8 @@ public class FirtexNetwork
         }
     }
 
-    public static string AllBlockchainNode(string IpAddress, Blockchain blockchain)
+    public static string AllBlockchainNode(string IpAddress, Blockchain blockchain, int port)
     {
-        int port = 9994;
         try
         {
             using (TcpClient tcpClient = new TcpClient(IpAddress, port))

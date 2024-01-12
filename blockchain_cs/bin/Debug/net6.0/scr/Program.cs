@@ -139,7 +139,6 @@ class Program
 
                     case "test -data -n":
                         Dictionary<string, Dictionary<string, string>> blockPortsByIp = DataNetwork.GetAllBlockPortsByIp();
-                        Console.WriteLine(blockPortsByIp["192.168.192.209"]["MainPort"]);
                         break;
                     
 
