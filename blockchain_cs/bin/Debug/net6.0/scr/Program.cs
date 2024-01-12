@@ -33,9 +33,13 @@ class Program
         AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) => Components.ExitSession(sender, eventArgs, session);
         if (Components.ConnectFirtex())
         {   
+<<<<<<< HEAD
             Components.StartNodeServer(blockchain, session);
             Components.StartBlocksNode(blockchain, session);
             Components.StartLastBlockNode(blockchain, session);
+=======
+            Components.StartNodeServer(blockchain);
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
             if (address == null)
             {
                 Components.HomeGreeting();
@@ -120,14 +124,39 @@ class Program
                         break;
 
                     case "test -blockchain":
+<<<<<<< HEAD
                         Components.AllBlockchainConnection(blockchain);
                         
+=======
+                        string[] ipAddress = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
+                        string activeNode = FirtexNetwork.ConnectionActiveAddresses(ipAddress);
+                        string ResponceBlockchain = FirtexNetwork.AllBlockchainNode(activeNode, blockchain);
+                        string jsonLocalBlockchain = Blockchain.SerializeBlockchainToJson(blockchain);
+                        (bool compare, int differingIndex) = FirtexNetwork.CompareBlockchainsJson(ResponceBlockchain, jsonLocalBlockchain);
+                        Console.WriteLine(differingIndex);
+                        Console.WriteLine(ResponceBlockchain);
+                        FirtexNetwork.UpdateBlockchainFromComparison(jsonLocalBlockchain, ResponceBlockchain, blockchain);
+                        List<int> ints = FirtexNetwork.GetExtraBlockIndexes(jsonLocalBlockchain, ResponceBlockchain);
+                        List<Block> blocks = FirtexNetwork.OpenExtraBlock(ints, blockchain);
+                        List<string> blockJsonArray = new List<string>();
+                        foreach (var block in blocks)
+                        {
+                            string BlockJson = Blockchain.SerializeBlockToJson(block);
+                            blockJsonArray.Add(BlockJson);
+                        }
+                        string combinedJson = Blockchain.CombineBlockJsonArray(blockJsonArray);
+                        if(combinedJson != null)
+                        {
+                            FirtexNetwork.SendExtraBlocks(activeNode, combinedJson);
+                        }
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
                         break;
 
                     case "blockchain -json":
                         string jsonBlockchain = Blockchain.SerializeBlockchainToJson(blockchain);
                         Console.WriteLine(jsonBlockchain);
                         break;
+<<<<<<< HEAD
 
                     case "data":
                         Components.ReadDataFile(session);
@@ -143,6 +172,8 @@ class Program
                     
 
 
+=======
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
                 }
             }
         }

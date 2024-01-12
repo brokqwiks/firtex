@@ -197,8 +197,15 @@ public class Blockchain
     {
         try
         {
+<<<<<<< HEAD
             JObject blockchainObject = new JObject();
 
+=======
+            // Создаем объект, который будет содержать информацию о блокчейне
+            JObject blockchainObject = new JObject();
+
+            // Сериализуем каждый блок в блокчейне
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
             JArray blocksArray = new JArray();
             foreach (var block in blockchain.blocks)
             {
@@ -217,8 +224,15 @@ public class Blockchain
                 blocksArray.Add(blockObject);
             }
 
+<<<<<<< HEAD
             blockchainObject["Blocks"] = blocksArray;
 
+=======
+            // Добавляем массив блоков к объекту блокчейна
+            blockchainObject["Blocks"] = blocksArray;
+
+            // Сериализуем объект блокчейна в JSON
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
             string jsonBlockchain = blockchainObject.ToString();
 
             return jsonBlockchain;
@@ -234,6 +248,10 @@ public class Blockchain
     {
         try
         {
+<<<<<<< HEAD
+=======
+            // Создаем объект, который будет содержать информацию о блоке
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
             JObject blockObject = new JObject();
 
             blockObject["Index"] = block.Index;
@@ -247,6 +265,10 @@ public class Blockchain
             blockObject["AddressToSend"] = block.AddressToSend;
             blockObject["Coins"] = block.Coins;
 
+<<<<<<< HEAD
+=======
+            // Сериализуем объект блока в JSON
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
             string jsonBlock = blockObject.ToString();
 
             return jsonBlock;
@@ -292,8 +314,15 @@ public class Blockchain
     {
         try
         {
+<<<<<<< HEAD
             JObject blockchainObject = new JObject();
 
+=======
+            // Создаем объект, который будет содержать информацию о блокчейне
+            JObject blockchainObject = new JObject();
+
+            // Сериализуем каждый JSON блока в массив
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
             JArray blocksArray = new JArray();
             foreach (var blockJson in blockJsonArray)
             {
@@ -301,8 +330,15 @@ public class Blockchain
                 blocksArray.Add(blockObject);
             }
 
+<<<<<<< HEAD
             blockchainObject["Blocks"] = blocksArray;
 
+=======
+            // Добавляем массив блоков к объекту блокчейна
+            blockchainObject["Blocks"] = blocksArray;
+
+            // Сериализуем объект блокчейна в JSON
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
             string jsonBlockchain = blockchainObject.ToString();
 
             return jsonBlockchain;
@@ -314,6 +350,7 @@ public class Blockchain
         }
     }
 
+<<<<<<< HEAD
     public static List<Block> DeserializeBlocksFromJson(string jsonBlockchain)
     {
         try
@@ -352,6 +389,8 @@ public class Blockchain
     }
 
 
+=======
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
     public bool ContainsBlock(Block block)
     {
         // Проверяем, содержится ли блок в локальном блокчейне

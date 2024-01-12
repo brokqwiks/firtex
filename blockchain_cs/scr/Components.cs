@@ -327,10 +327,18 @@ public class Components
         Console.WriteLine($"{localIP}");
     }
 
+<<<<<<< HEAD
     public static void StartNodeServer(Blockchain blockchain, SessionNetwork session)
     {
         string IpAddress = FirtexNetwork.GetLocalIpNetwork();
         Task.Run(() => ServerFirtexNetwork.StartServer(IpAddress, blockchain, session, "Main"));
+=======
+    public static void StartNodeServer(Blockchain blockchain)
+    {
+        string IpAddress = FirtexNetwork.GetLocalIpNetwork();
+        int Port = 9994;
+        Task.Run(() => FirtexNetwork.StartServer(IpAddress, Port, blockchain));
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
 
     }
 
@@ -350,6 +358,7 @@ public class Components
     {
         string[] activeAddresses = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
         string activeAddress = FirtexNetwork.ConnectionActiveAddresses(activeAddresses);
+<<<<<<< HEAD
         bool testNode = FirtexNetwork.TestConnectionServer(activeAddress, 8844);
         Console.WriteLine($"The response from the node {activeAddress}: {testNode}");
         Dictionary<string, string> data = DataNetwork.ReadDataFile(activeAddress);
@@ -357,6 +366,10 @@ public class Components
         {
             Console.WriteLine($"Name: {entry.Key}, Port: {entry.Value}");
         }
+=======
+        bool testNode = FirtexNetwork.TestNodeServer(activeAddress, 9994);
+        Console.WriteLine($"The response from the node {activeAddress}: {testNode}");
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
     }
 
     public static void NodeActive()
@@ -381,6 +394,7 @@ public class Components
     {
         string[] activeNodes = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
         string IpAddressNode = FirtexNetwork.ConnectionActiveAddresses(activeNodes);
+<<<<<<< HEAD
         Dictionary<string, Dictionary<string, string>> NodePorts = DataNetwork.GetAllBlockPortsByIp();
         int Port = Int32.Parse(NodePorts[IpAddressNode]["MainPort"]);
         bool LastBlockResponce = FirtexNetwork.GetLastBlockNode(IpAddressNode, blockchain, Port);
@@ -433,5 +447,10 @@ public class Components
         }
     }
 
+=======
+        bool LastBlockResponce = FirtexNetwork.GetLastBlockNode(IpAddressNode, blockchain);
+        Console.WriteLine(LastBlockResponce);
+    }
+>>>>>>> c22c8ec6e0cda82e50609bf3d99b271a0cd94ec5
 }
 
