@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 public class WalletData
 {
     public string Address { get; set; }
-    public string PrivateKey { get; set; }
+    public string Phrase { get; set; }
     public string PublicKey { get; set; }
 }
 
@@ -32,10 +32,10 @@ public class BinaryFileHandler
             {
                 writer.Write(walletData.Address);
 
-                string privateKeyHex = walletData.PrivateKey;
+                string Phrase = walletData.Phrase;
                 string publicKeyHex = walletData.PublicKey;
 
-                writer.Write(privateKeyHex);
+                writer.Write(Phrase);
                 writer.Write(publicKeyHex);
             }
         }
@@ -56,14 +56,14 @@ public class BinaryFileHandler
                 using (BinaryReader reader = new BinaryReader(File.OpenRead(walletFilePath)))
                 {
                     string savedAddress = reader.ReadString();
-                    string privateKey = reader.ReadString();
+                    string phrase = reader.ReadString();
                     string publicKey = reader.ReadString();
                     string signatureKey = reader.ReadString();
 
                     Dictionary<string, string> walletDataDictionary = new Dictionary<string, string>
                 {
                     { "Address", savedAddress },
-                    { "PrivateKey", privateKey },
+                    { "Phrase",  phrase },
                     { "PublicKey", publicKey },
                     { "Signature", signatureKey }
                 };

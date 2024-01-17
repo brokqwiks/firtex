@@ -50,8 +50,7 @@ class Program
                     case "login":
                         if (address == null)
                         {
-                            string userSendPrivateKey = ReadLine();
-                            Components.LoginInPrivateKey(userSendPrivateKey);
+                            Components.LoginPhrase();
                         }
                         else
                         {

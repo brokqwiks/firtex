@@ -14,6 +14,7 @@ using ZeroTier;
 using System.Net.Sockets;
 using Newtonsoft.Json.Linq;
 using System.Runtime.ConstrainedExecution;
+using Org.BouncyCastle.Asn1.X9;
 
 public class Components
 {
@@ -88,7 +89,7 @@ public class Components
                         WalletData walletData = new WalletData
                         {
                             Address = generate_address,
-                            PrivateKey = privateKey,
+                            Phrase = mnemonic_phrase,
                             PublicKey = publicKey,
                         };
 
@@ -162,8 +163,9 @@ public class Components
         return signatureHex;
     }
 
-    public static void CreateTransaction(Blockchain blockchain, string privateKeyHex)
+    public static void CreateTransaction(Blockchain blockchain, string phrase)
     {
+        string privateKeyHex = PrivateKey.generate_private_key(phrase);
         string publicKeyHex = PublicKey.GeneratePublicKey(privateKeyHex);
         string address = AddressGenerator.GenerateReadableAddress(publicKeyHex);
 
@@ -458,7 +460,39 @@ public class Components
         }
     }
 
-    
+    public static void LoginPhrase()
+    {
+        try
+        {
+            Console.WriteLine("To restore your wallet, write a secret phrase. Put one space after each word. Do not insert commas and extra spaces!");
+            string phrase = Console.ReadLine().ToString().Trim();
+            if (phrase != null && phrase != "")
+            {
+                Console.WriteLine("Generating...");
+                byte[] privateKeyBytes = PrivateKey.GetPrivateKeyBytes(phrase);
+                string privateKeyHex = PrivateKey.generate_private_key(phrase);
+                string publicKeyHex = PublicKey.GeneratePublicKey(privateKeyHex);
+                string address = AddressGenerator.GenerateReadableAddress(publicKeyHex);
+
+                BinaryFileHandler fileHandler = new BinaryFileHandler();
+
+                WalletData walletData = new WalletData
+                {
+                    Address = address,
+                    Phrase = phrase,
+                    PublicKey = publicKeyHex,
+                };
+
+                fileHandler.RegisterWallet(walletData);
+                Exe.CreateCopyExe(address, address);
+                Console.WriteLine("The wallet has been successfully restored!");
+                Exe.OpenCopyExe(address);
+            }
+        }catch (Exception ex) 
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
 
 }
 
