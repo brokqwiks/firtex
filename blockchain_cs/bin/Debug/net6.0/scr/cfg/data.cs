@@ -167,12 +167,17 @@ public class DataNetwork
             string ipAddress = json["ipAddress"]?.ToString();
             string mainPort = json["MainPort"]?.ToString();
             string blockPort = json["BlockPort"]?.ToString();
+            string lastBlockPort = json["LastBlockPort"]?.ToString();
+            string allblockchainPort = json["AllBlockchainPort"]?.ToString();
+
 
             List<string> lines = new List<string>
         {
             $"Name: {ipAddress}",
             $"MainPort: {mainPort}",
-            $"BlockPort: {blockPort}"
+            $"BlockPort: {blockPort}",
+            $"LastBlockPort: {lastBlockPort}",
+            $"AllBlockchainPort: {allblockchainPort}"
         };
 
             File.AppendAllLines(filePath, lines);
@@ -198,23 +203,19 @@ public class DataNetwork
             {
                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
 
-                // Проверяем, что файл начинается с "node_"
                 if (fileNameWithoutExtension.StartsWith("node_"))
                 {
-                    // Обрезаем префикс "node_"
                     string ipAddress = fileNameWithoutExtension.Substring("node_".Length);
 
                     Console.WriteLine(ipAddress);
 
                     Dictionary<string, string> dataDictionary = ReadDataFile(fileNameWithoutExtension);
 
-                    // Создаем словарь для данного ipAddress, если его еще нет
                     if (!blockPortsByIp.ContainsKey(ipAddress))
                     {
                         blockPortsByIp[ipAddress] = new Dictionary<string, string>();
                     }
 
-                    // Добавляем данные в словарь
                     foreach (var item in dataDictionary)
                     {
                         Console.WriteLine(item);
@@ -262,6 +263,12 @@ public class DataNetwork
         }
 
         return dataDictionary;
+    }
+
+    public static bool CheckDataFileExists(string name)
+    {
+        string filePath = $"data/node_{name}.dat";
+        return File.Exists(filePath);
     }
 
 }

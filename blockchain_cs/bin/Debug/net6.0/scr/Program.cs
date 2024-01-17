@@ -2,28 +2,16 @@
 using System;
 using System.Text;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Crypto.Generators;
-using System.Security.Cryptography;
-using System.Runtime.ConstrainedExecution;
-using NBitcoin.RPC;
-using System.Collections.Generic;
-using System.Globalization;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System.Net.Sockets;
-using System.Net;
-using WebSocketSharp.Server;
-using WebSocketSharp;
-using WebSocketSharp.Server;
-using System.Threading.Tasks;
-using NBitcoin;
+using System.Timers;
+using System;
+using System.ComponentModel;
 
 class Program
 {
     static void Main(string[] args)
     {
         Blockchain blockchain = new Blockchain();
+        Components.IsBlockchainFolderExists("blockchain_blocks");
         blockchain.LoadFromFile();
 
         SessionNetwork session = new SessionNetwork();
@@ -36,6 +24,15 @@ class Program
             Components.StartNodeServer(blockchain, session);
             Components.StartBlocksNode(blockchain, session);
             Components.StartLastBlockNode(blockchain, session);
+            Components.StartAllBlockchainNode(blockchain, session);
+
+            var startTimeSpan = TimeSpan.Zero;
+            var periodTimeSpan = TimeSpan.FromMinutes(1);
+
+            var timer = new System.Threading.Timer((e) =>
+            {
+                Components.SyncFirtexNetwork(blockchain, session);
+            }, null, startTimeSpan, periodTimeSpan);
             if (address == null)
             {
                 Components.HomeGreeting();
@@ -112,15 +109,15 @@ class Program
                         break;
 
                     case "test -n":
-                        Components.TestNodeConnection();
+                        Components.TestNodeConnection(session);
                         break;
 
                     case "test -lastblock":
-                        Components.LastBlockResponce(blockchain);
+                        Components.LastBlockResponce(blockchain, session);
                         break;
 
                     case "test -blockchain":
-                        Components.AllBlockchainConnection(blockchain);
+                        Components.AllBlockchainConnection(blockchain, session);
                         
                         break;
 
@@ -131,6 +128,8 @@ class Program
 
                     case "data":
                         Components.ReadDataFile(session);
+                        Dictionary<string, string> SessionData =  session.ReadNodeData();
+                        Console.WriteLine(SessionData["Main"]);
                         break;
 
                     case "start server":
@@ -140,9 +139,14 @@ class Program
                     case "test -data -n":
                         Dictionary<string, Dictionary<string, string>> blockPortsByIp = DataNetwork.GetAllBlockPortsByIp();
                         break;
-                    
 
+                    case "sync":
+                        Components.SyncFirtexNetwork(blockchain, session);
+                        break;
 
+                    case "block -c -g":
+                        blockchain.CreateGenesisBlock();
+                        break;
                 }
             }
         }

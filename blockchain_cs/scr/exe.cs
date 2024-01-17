@@ -87,7 +87,6 @@ public class Exe
             KillExistingProcess();
             cmdProcess.Start();
 
-            // Передаем команду ввода в cmd
             cmdProcess.StandardInput.WriteLine($"start {exeFilePath}");
 
             return true;
@@ -102,10 +101,8 @@ public class Exe
     private static void KillExistingProcess()
     {
         string exeFileName = $"{GetFileName()}.exe";
-        // Получаем все процессы с заданным именем
         Process[] processes = Process.GetProcessesByName(exeFileName);
 
-        // Завершаем каждый процесс
         foreach (Process process in processes)
         {
             process.Kill();

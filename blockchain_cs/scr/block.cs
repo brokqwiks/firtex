@@ -95,10 +95,6 @@ public class Blockchain
             }
         }
 
-        if (blocks.Count == 0)
-        {
-            CreateGenesisBlock();
-        }
     }
 
     private void SaveToFile(Block block)
@@ -127,7 +123,7 @@ public class Blockchain
         return null;
     }
 
-    private void CreateGenesisBlock()
+    public void CreateGenesisBlock()
     {
         Block genesisBlock = new Block
         {
@@ -354,9 +350,31 @@ public class Blockchain
 
     public bool ContainsBlock(Block block)
     {
-        // Проверяем, содержится ли блок в локальном блокчейне
         return blocks.Any(b => b.Index == block.Index && b.BlockHash == block.BlockHash);
     }
+
+    public bool ReplaceBlock(int index, Block newBlock)
+    {
+        try
+        {
+            if (index >= 0 && index < blocks.Count)
+            {
+                blocks[index] = newBlock;
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Invalid index");
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return false;
+        }
+    }
+
 
 }
 

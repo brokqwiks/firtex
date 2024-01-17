@@ -346,16 +346,20 @@ public class Components
         Task.Run(() => ServerFirtexNetwork.StartServer(IpAddress, blockchain, session, "LastBlock"));
     }
 
-    public static void TestNodeConnection()
+    public static void StartAllBlockchainNode(Blockchain blockchain, SessionNetwork session)
     {
-        string[] activeAddresses = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
-        string activeAddress = FirtexNetwork.ConnectionActiveAddresses(activeAddresses);
-        bool testNode = FirtexNetwork.TestConnectionServer(activeAddress, 8844);
-        Console.WriteLine($"The response from the node {activeAddress}: {testNode}");
-        Dictionary<string, string> data = DataNetwork.ReadDataFile(activeAddress);
-        foreach (var entry in data)
+        string IpAddress = FirtexNetwork.GetLocalIpNetwork();
+        Task.Run(() => ServerFirtexNetwork.StartServer(IpAddress, blockchain, session, "AllBlockchain"));
+    }
+
+    public static void TestNodeConnection(SessionNetwork session)
+    {
+        string activesnodes = FirtexNetwork.GetActiveNodes().Result;
+        string[] activenodeArr = FirtexNetwork.ActiveIpAddressesArray(activesnodes);
+        List<string> activenode = FirtexNetwork.ConnectionActiveAddresses(activenodeArr, session);
+        foreach (var ipaddress in activenode)
         {
-            Console.WriteLine($"Name: {entry.Key}, Port: {entry.Value}");
+            FirtexNetwork.GetPortsConnectionServer(ipaddress, 8844, session);
         }
     }
 
@@ -377,14 +381,18 @@ public class Components
         Console.WriteLine(testResponce);
     }
 
-    public static void LastBlockResponce(Blockchain blockchain) 
+    public static void LastBlockResponce(Blockchain blockchain, SessionNetwork session) 
     {
         string[] activeNodes = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
-        string IpAddressNode = FirtexNetwork.ConnectionActiveAddresses(activeNodes);
+        List<string> IpAddressNode = FirtexNetwork.ConnectionActiveAddresses(activeNodes, session);
         Dictionary<string, Dictionary<string, string>> NodePorts = DataNetwork.GetAllBlockPortsByIp();
-        int Port = Int32.Parse(NodePorts[IpAddressNode]["MainPort"]);
-        bool LastBlockResponce = FirtexNetwork.GetLastBlockNode(IpAddressNode, blockchain, Port);
-        Console.WriteLine(LastBlockResponce);
+        foreach (var ipaddress in IpAddressNode)
+        {
+            int Port = Int32.Parse(NodePorts[ipaddress]["LastBlockPort"]);
+            bool LastBlockResponce = FirtexNetwork.GetLastBlockNode(ipaddress, blockchain, Port);
+            Console.WriteLine(LastBlockResponce);
+        }
+
     }
 
     public static void ExitSession(object sender, EventArgs e, SessionNetwork session) 
@@ -392,15 +400,19 @@ public class Components
         session.ClearData();
     }
 
-    public static void AllBlockchainConnection(Blockchain blockchain)
+    public static void AllBlockchainConnection(Blockchain blockchain, SessionNetwork session)
     {
         string[] ipAddress = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
-        string activeNode = FirtexNetwork.ConnectionActiveAddresses(ipAddress);
-        Dictionary<string, Dictionary<string, string>> NodePorts = DataNetwork.GetAllBlockPortsByIp();
-        int Port = Int32.Parse(NodePorts[activeNode]["MainPort"]);
-        string ResponceBlockchain = FirtexNetwork.AllBlockchainNode(activeNode, blockchain, Port);
-        string jsonLocalBlockchain = Blockchain.SerializeBlockchainToJson(blockchain);
-        FirtexNetwork.AllBlockchainNode(activeNode, blockchain, Port);
+        List<string> activeNode = FirtexNetwork.ConnectionActiveAddresses(ipAddress, session);
+        foreach (var ipaddress in activeNode)
+        {
+            Dictionary<string, Dictionary<string, string>> NodePorts = DataNetwork.GetAllBlockPortsByIp();
+            int Port = Int32.Parse(NodePorts[ipaddress]["MainPort"]);
+            string ResponceBlockchain = FirtexNetwork.AllBlockchainNode(ipaddress, blockchain, Port);
+            string jsonLocalBlockchain = Blockchain.SerializeBlockchainToJson(blockchain);
+            FirtexNetwork.AllBlockchainNode(ipaddress, blockchain, Port);
+        }
+
     }
 
     public static void ReadDataFile(SessionNetwork session)
@@ -412,26 +424,41 @@ public class Components
         }
     }
 
-    public static void SyncincWithFirtexNetwork(Blockchain blockchain)
+    public static void SyncFirtexNetwork(Blockchain blockchain, SessionNetwork session)
     {
         string[] ipAddress = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
-        string activeNode = FirtexNetwork.ConnectionActiveAddresses(ipAddress);
-        bool TestConnection = FirtexNetwork.TestConnectionServer(activeNode, 8844);
-        if (TestConnection)
+        List<string> activeNode = FirtexNetwork.ConnectionActiveAddresses(ipAddress, session);
+        if (blockchain.blocks.Count != 0)
         {
-            Dictionary<string, Dictionary<string, string>> NodePorts = DataNetwork.GetAllBlockPortsByIp();
-            if (NodePorts != null)
+            foreach (var ipaddress in activeNode)
             {
-                int PortLastBlock = Int32.Parse(NodePorts[activeNode]["LastBlock"]);
-                bool LastBlock = FirtexNetwork.GetLastBlockNode(activeNode, blockchain, PortLastBlock);
-                if (!LastBlock)
+                Dictionary<string, Dictionary<string, string>> NodePorts = DataNetwork.GetAllBlockPortsByIp();
+                int LastBlockPort = Int32.Parse(NodePorts[ipaddress]["LastBlockPort"]);
+                bool LastBlockResponce = FirtexNetwork.GetLastBlockNode(ipaddress, blockchain, LastBlockPort);
+                if (!LastBlockResponce)
                 {
-                    int PortAllBlockchain = Int32.Parse(NodePorts[activeNode]["MainPort"]);
-                    FirtexNetwork.AllBlockchainNode(activeNode, blockchain, PortAllBlockchain);
+                    string blockchainJson = ServerFirtexNetwork.ReturnAllBLockchainResponce(blockchain).Result;
+                    var blocks = Blockchain.DeserializeBlocksFromJson(blockchainJson);
+                    FirtexNetwork.SendBlockchainBlocks(ipaddress, blocks, blockchain, Int32.Parse(NodePorts[ipaddress]["BlockPort"]));
                 }
+                continue;
             }
         }
+        else
+        {
+            Console.WriteLine("Blockchain is null");
+        }
     }
+
+    public static void IsBlockchainFolderExists(string folderPath)
+    {   
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+    }
+
+    
 
 }
 

@@ -14,6 +14,7 @@ using IPAddress = System.Net.IPAddress;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using System.Text.Json.Nodes;
 
 
 public class ServerFirtexNetwork
@@ -27,19 +28,17 @@ public class ServerFirtexNetwork
             if (jsonObject.ContainsKey("type"))
             {
                 string messageType = jsonObject["type"].ToString();
-
+                Console.WriteLine(jsonMessage);
                 switch (messageType)
                 {
-                    case "Test":
+                    case "GetPorts":
                         string jsonResponse = await ValidateTestJsonMessage(jsonMessage, session);
                         if (jsonResponse != null)
                         {
-                            // Возвращаем JSON с портами и testconnection = true
                             return new HandleClientResult { ValidationResult = true, ResponseMessage = jsonResponse };
                         }
                         else
                         {
-                            // Возвращаем ошибку
                             return new HandleClientResult { ValidationResult = false, ResponseMessage = "Error processing test message" };
                         }
 
@@ -47,38 +46,18 @@ public class ServerFirtexNetwork
                         bool lastBlockResult = await ValidateLastBlockJson(jsonMessage, blockchain);
                         return new HandleClientResult { ValidationResult = lastBlockResult, ResponseMessage = lastBlockResult.ToString() };
 
-                    case "AllBlockchain":
-                        string blockchainJson = await ReturnAllBLockchainResponce(blockchain);
-                        var blocks = Blockchain.DeserializeBlocksFromJson(blockchainJson);
-                        string senderIpAddress = jsonObject["ipAddress"]?.ToString();
-
-                        await FirtexNetwork.SendBlockchainBlocks(senderIpAddress, blocks, blockchain);
-
-                        return new HandleClientResult { ValidationResult = true, ResponseMessage = "Blocks sent successfully" };
-
-
                     case "AddBlock":
-                        if (jsonObject.ContainsKey("block"))
+                        bool AddBlock = AddBlockInNodeBlockchain(blockchain, jsonObject);
+                        if (AddBlock)
                         {
-                            string blockJson = jsonObject["block"].ToString();
-                            Block block = Blockchain.DeserializeBlock(blockJson);
+                            return new HandleClientResult { ValidationResult = true, ResponseMessage = "Block added" };
 
-                            if (!blockchain.ContainsBlock(block))
-                            {
-                                blockchain.AddBlock(block);
-                                Console.WriteLine($"Added block from the client to the local blockchain. Index: {block.Index}");
-
-                                return new HandleClientResult { ValidationResult = true, ResponseMessage = "Block added successfully" };
-                            }
-                            else
-                            {
-                                return new HandleClientResult { ValidationResult = true, ResponseMessage = "Block already exists" };
-                            }
                         }
                         else
                         {
-                            return new HandleClientResult { ValidationResult = false, ResponseMessage = "Invalid message format" };
+                            return new HandleClientResult { ValidationResult = false, ResponseMessage = "Block not added" };
                         }
+
 
 
                     default:
@@ -171,15 +150,19 @@ public class ServerFirtexNetwork
         }
     }
 
-
-
     public static async Task<string> ValidateTestJsonMessage(string jsonMessage, SessionNetwork session)
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(jsonMessage))
+            {
+                Console.WriteLine("Error: Empty or null JSON message.");
+                return null;
+            }
+
             JObject jsonObject = JObject.Parse(jsonMessage);
 
-            if (jsonObject.ContainsKey("type") && jsonObject["type"].ToString().ToLower() == "test")
+            if (jsonObject.ContainsKey("type") && jsonObject["type"].ToString().ToLower() == "getports")
             {
                 Dictionary<string, string> sessionData = session.ReadNodeData();
 
@@ -193,7 +176,7 @@ public class ServerFirtexNetwork
 
                 jsonObject["testconnection"] = true;
 
-                string jsonResponse = jsonObject.ToString();
+                string jsonResponse = jsonObject.ToString(Formatting.None);
 
                 return jsonResponse;
             }
@@ -209,7 +192,6 @@ public class ServerFirtexNetwork
             return null;
         }
     }
-
 
     public static bool IsValidIpAddress(string ipAddress, string activeNodesJson)
     {
@@ -242,26 +224,30 @@ public class ServerFirtexNetwork
         {
             Block LastBlock = blockchain.GetLastBlock();
             JObject jsonObject = JObject.Parse(jsonMessage);
-            if (jsonObject != null)
+            if (LastBlock != null)
             {
-                if (jsonObject["BlockHash"].ToString() == LastBlock.BlockHash)
+                if (jsonObject != null)
                 {
-                    string activeNodesJson = await FirtexNetwork.GetActiveNodes();
-                    if (IsValidIpAddress(jsonObject["ipAddress"].ToString(), activeNodesJson))
+                    if (jsonObject["BlockHash"].ToString() == LastBlock.BlockHash)
                     {
-                        return true;
+                        string activeNodesJson = await FirtexNetwork.GetActiveNodes();
+                        if (IsValidIpAddress(jsonObject["ipAddress"].ToString(), activeNodesJson))
+                        {
+                            return true;
+                        }
+                        else { return false; }
                     }
-                    else { return false; }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
                     return false;
                 }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         catch (Exception ex)
         {
@@ -302,6 +288,30 @@ public class ServerFirtexNetwork
             return true;
         }
         catch
+        {
+            return false;
+        }
+    }
+
+    public static bool AddBlockInNodeBlockchain(Blockchain blockchain, JObject jsonObject)
+    {
+        if (jsonObject.ContainsKey("block"))
+        {
+            string blockJson = jsonObject["block"].ToString();
+            Block block = Blockchain.DeserializeBlock(blockJson);
+
+            if (!blockchain.ContainsBlock(block))
+            {
+                blockchain.AddBlock(block);
+                Console.WriteLine($"Added block from the client to the local blockchain. Index: {block.Index}");
+                return true;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
         {
             return false;
         }

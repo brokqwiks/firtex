@@ -181,7 +181,6 @@ public class FirtexNetwork
             {
                 if (line.Contains("firtextest"))
                 {
-                    // Разбираем строку и получаем IP-адрес
                     string[] parts = line.Split(' ');
                     string ipAddressWithMask = parts.LastOrDefault(part => part.Contains("/"));
 
@@ -202,42 +201,64 @@ public class FirtexNetwork
         return null;
     }
 
-    public static bool TestConnectionServer(string IpAddress, int port)
+    public static bool GetPortsConnectionServer(string IpAddress, int port, SessionNetwork session)
     {
         try
-        {   
-            using (TcpClient tcpClient = new TcpClient(IpAddress, port))
+        {
+            TcpClient tcpClient = new TcpClient();
+
+            tcpClient.ReceiveTimeout = 8000;
+
+            Task<bool> connectTask = Task.Run(async () =>
+            {
+                try
+                {
+                    await tcpClient.ConnectAsync(IpAddress, port);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            });
+
+            if (connectTask.Wait(8000) && connectTask.Result)
             {
                 using (NetworkStream clientStream = tcpClient.GetStream())
                 {
                     JObject jsonMessage = new JObject();
-                    jsonMessage["type"] = "Test";
-                    jsonMessage["test"] = "test";
-                    jsonMessage["ipAddress"] = GetLocalIpNetwork();
-                    jsonMessage["port"] = port;
-
-                    byte[] data = Encoding.ASCII.GetBytes(jsonMessage.ToString());
-                    clientStream.Write(data, 0, data.Length);
-
-                    byte[] response = new byte[4096];
-                    int bytesRead = clientStream.Read(response, 0, 4096);
-                    string serverResponse = Encoding.ASCII.GetString(response, 0, bytesRead);
-
-                    Console.WriteLine(serverResponse);
-                    JObject jsonResponce = JObject.Parse(serverResponse);
-                    
-                    
-                    if (jsonResponce.ContainsKey("testconnection") && (bool)jsonResponce["testconnection"])
-                    {   
-                        tcpClient.Close();
-                        DataNetwork.CreateDataFile(IpAddress);
-                        DataNetwork.AddEntriesToFile(IpAddress, serverResponse);
-                        return true;
-                    }
-                    else
+                    Dictionary<string, string> SessionPortsData = session.ReadNodeData();
+                    if (SessionPortsData != null)
                     {
-                        tcpClient.Close();
-                        return false;
+                        jsonMessage["type"] = "GetPorts";
+                        jsonMessage["ipAddress"] = GetLocalIpNetwork();
+                        jsonMessage["MainPort"] = SessionPortsData["Main"];
+                        jsonMessage["LastBlockPort"] = SessionPortsData["LastBlock"];
+                        jsonMessage["BlockPort"] = SessionPortsData["Block"];
+                        jsonMessage["AllBlockchainPort"] = SessionPortsData["AllBlockchain"];
+
+                        byte[] data = Encoding.ASCII.GetBytes(jsonMessage.ToString());
+                        clientStream.Write(data, 0, data.Length);
+
+                        byte[] response = new byte[4096];
+                        int bytesRead = clientStream.Read(response, 0, 4096);
+                        string serverResponse = Encoding.ASCII.GetString(response, 0, bytesRead);
+
+                        Console.WriteLine(serverResponse);
+                        JObject jsonResponse = JObject.Parse(serverResponse);
+
+                        if (jsonResponse.ContainsKey("testconnection") && (bool)jsonResponse["testconnection"])
+                        {
+                            tcpClient.Close();
+                            DataNetwork.CreateDataFile(IpAddress);
+                            DataNetwork.AddEntriesToFile(IpAddress, serverResponse);
+                            return true;
+                        }
+                        else
+                        {
+                            tcpClient.Close();
+                            return false;
+                        }
                     }
                 }
             }
@@ -247,57 +268,73 @@ public class FirtexNetwork
             Console.WriteLine($"Error: {ex.Message}");
             return false;
         }
+
+        return false;
     }
 
-    public static string ConnectionActiveAddresses(string[] activeAddressesArray)
+
+
+
+
+    public static List<string> ConnectionActiveAddresses(string[] activeAddressesArray, SessionNetwork session)
     {
-        foreach (var Address in activeAddressesArray)
+        List<string> connectedAddresses = new List<string>();
+
+        foreach (var address in activeAddressesArray)
         {
-            bool Connect = TestConnectionServer(Address, 8844);
-            if (Connect)
+            bool connect = GetPortsConnectionServer(address, 8844, session);
+
+            if (connect)
             {
-                return Address.ToString();
+                connectedAddresses.Add(address);
             }
         }
-        return null;
+
+        return connectedAddresses;
     }
+
 
     public static bool GetLastBlockNode(string IpAddress, Blockchain blockchain, int port)
     {
         try
         {
             Block LastBlock = blockchain.GetLastBlock();
-            using (TcpClient tcpClient = new TcpClient(IpAddress, port))
+            if (LastBlock != null)
             {
-                using (NetworkStream clientStream = tcpClient.GetStream())
+                using (TcpClient tcpClient = new TcpClient(IpAddress, port))
                 {
-                    JObject jsonMessage = new JObject();
-                    jsonMessage["type"] = "LastBlock";
-                    jsonMessage["LastBlock"] = LastBlock.Index.ToString();
-                    jsonMessage["BlockHash"] = LastBlock.BlockHash.ToString();
-                    jsonMessage["ipAddress"] = GetLocalIpNetwork();
-                    jsonMessage["ipAddressToSend"] = IpAddress;
-                    jsonMessage["port"] = port;
-
-                    byte[] data = Encoding.ASCII.GetBytes(jsonMessage.ToString());
-                    clientStream.Write(data, 0, data.Length);
-
-                    byte[] response = new byte[4096];
-                    int bytesRead = clientStream.Read(response, 0, 4096);
-                    string serverResponse = Encoding.ASCII.GetString(response, 0, bytesRead);
-
-                    tcpClient.Close();
-                    if (serverResponse == "True")
+                    using (NetworkStream clientStream = tcpClient.GetStream())
                     {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                        JObject jsonMessage = new JObject();
 
+                        jsonMessage["type"] = "LastBlock";
+                        jsonMessage["LastBlock"] = LastBlock.Index.ToString();
+                        jsonMessage["BlockHash"] = LastBlock.BlockHash.ToString();
+                        jsonMessage["ipAddress"] = GetLocalIpNetwork();
+                        jsonMessage["ipAddressToSend"] = IpAddress;
+                        jsonMessage["port"] = port;
+
+                        byte[] data = Encoding.ASCII.GetBytes(jsonMessage.ToString());
+                        clientStream.Write(data, 0, data.Length);
+
+                        byte[] response = new byte[4096];
+                        int bytesRead = clientStream.Read(response, 0, 4096);
+                        string serverResponse = Encoding.ASCII.GetString(response, 0, bytesRead);
+
+                        tcpClient.Close();
+                        if (serverResponse == "True")
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                    }
                 }
             }
+            return false;
         }
         catch (Exception ex)
         {
@@ -342,44 +379,68 @@ public class FirtexNetwork
         }
     }
 
-    public static async Task SendBlockchainBlocks(string ipAddress, List<Block> blocks, Blockchain blockchain)
+    public static async Task SendBlockchainBlocks(string ipAddress, List<Block> blocks, Blockchain blockchain, int port)
     {
-        int port = 9994;
-
         try
         {
-            using (TcpClient tcpClient = new TcpClient(ipAddress, port))
+            using (TcpClient tcpClient = new TcpClient())
             {
+                tcpClient.ReceiveTimeout = 100000;  
+                tcpClient.SendTimeout = 100000;  
+
+                await tcpClient.ConnectAsync(ipAddress, port);
+
                 using (NetworkStream clientStream = tcpClient.GetStream())
                 {
                     foreach (var block in blocks)
                     {
-                        JObject jsonMessage = new JObject();
-                        jsonMessage["type"] = "AddBlock";
-                        jsonMessage["block"] = Blockchain.SerializeBlockToJson(block);
-                        jsonMessage["port"] = port;
+                        if (block.Index == 0) 
+                        {
+                            var existingGenesisBlock = blockchain.blocks[0];
+                            if (existingGenesisBlock == null || !existingGenesisBlock.Equals(block))
+                            {
+                                JObject jsonMessage = new JObject();
+                                jsonMessage["type"] = "AddBlock";
+                                jsonMessage["block"] = Blockchain.SerializeBlockToJson(block);
+                                jsonMessage["port"] = port;
 
-                        byte[] data = Encoding.UTF8.GetBytes(jsonMessage.ToString(Formatting.None));
-                        clientStream.Write(data, 0, data.Length);
+                                byte[] data = Encoding.UTF8.GetBytes(jsonMessage.ToString(Formatting.None));
+                                await clientStream.WriteAsync(data, 0, data.Length);
 
-                        byte[] response = new byte[4096];
-                        int bytesRead = clientStream.Read(response, 0, 4096);
-                        string serverResponse = Encoding.UTF8.GetString(response, 0, bytesRead);
+                                byte[] response = new byte[4096];
+                                int bytesRead = await clientStream.ReadAsync(response, 0, 4096);
+                                string serverResponse = Encoding.UTF8.GetString(response, 0, bytesRead);
 
-                        Console.WriteLine(serverResponse); 
+                                Console.WriteLine(serverResponse);
+                            }
+                        }
+                        else
+                        {
+                            JObject jsonMessage = new JObject();
+                            jsonMessage["type"] = "AddBlock";
+                            jsonMessage["block"] = Blockchain.SerializeBlockToJson(block);
+                            jsonMessage["port"] = port;
+
+                            byte[] data = Encoding.UTF8.GetBytes(jsonMessage.ToString(Formatting.None));
+                            await clientStream.WriteAsync(data, 0, data.Length);
+
+                            byte[] response = new byte[4096];
+                            int bytesRead = await clientStream.ReadAsync(response, 0, 4096);
+                            string serverResponse = Encoding.UTF8.GetString(response, 0, bytesRead);
+
+                            Console.WriteLine(serverResponse);
+                        }
                     }
 
                     JObject allBlockchainRequest = new JObject();
                     allBlockchainRequest["type"] = "AllBlockchain";
 
                     byte[] allBlockchainData = Encoding.UTF8.GetBytes(allBlockchainRequest.ToString(Formatting.None));
-                    clientStream.Write(allBlockchainData, 0, allBlockchainData.Length);
+                    await clientStream.WriteAsync(allBlockchainData, 0, allBlockchainData.Length);
 
                     byte[] allBlockchainResponse = new byte[4096];
-                    int allBlockchainBytesRead = clientStream.Read(allBlockchainResponse, 0, 4096);
+                    int allBlockchainBytesRead = await clientStream.ReadAsync(allBlockchainResponse, 0, 4096);
                     string allBlockchainServerResponse = Encoding.UTF8.GetString(allBlockchainResponse, 0, allBlockchainBytesRead);
-
-                    Console.WriteLine(allBlockchainServerResponse); 
 
                     ProcessAllBlockchainResponse(allBlockchainServerResponse, blockchain);
                 }
@@ -390,6 +451,8 @@ public class FirtexNetwork
             Console.WriteLine(ex.ToString());
         }
     }
+
+
 
     private static void ProcessAllBlockchainResponse(string response, Blockchain blockchain)
     {
