@@ -96,8 +96,6 @@ public class Components
                         fileHandler.RegisterWallet(walletData);
 
                         Exe.CreateCopyExe(generate_address, generate_address);
-                        Console.WriteLine(privateKey);
-                        Console.WriteLine(publicKey);
                         Exe.OpenCopyExe(generate_address);
                     }
                 }
@@ -193,6 +191,7 @@ public class Components
                         {
                             Index = lastblock.Index + 1,
                             Timestamp = DateTime.Now,
+                            Type = "Send",
                             Data = transactionData,
                             PreviousBlockHash = lastblock.BlockHash,
                             PublicKey = publicKeyHex,
@@ -220,6 +219,7 @@ public class Components
         {
             Console.WriteLine($"Block #{blk.Index}");
             Console.WriteLine($"  Timestamp: {blk.Timestamp}");
+            Console.WriteLine($"  Type: {blk.Type}");
             Console.WriteLine($"  Data: {blk.Data}");
             Console.WriteLine($"  Previous Block Hash: {blk.PreviousBlockHash}");
             Console.WriteLine($"  Block Hash: {blk.BlockHash}");
@@ -400,21 +400,6 @@ public class Components
     public static void ExitSession(object sender, EventArgs e, SessionNetwork session) 
     {
         session.ClearData();
-    }
-
-    public static void AllBlockchainConnection(Blockchain blockchain, SessionNetwork session)
-    {
-        string[] ipAddress = FirtexNetwork.ActiveIpAddressesArray(FirtexNetwork.GetActiveNodes().Result);
-        List<string> activeNode = FirtexNetwork.ConnectionActiveAddresses(ipAddress, session);
-        foreach (var ipaddress in activeNode)
-        {
-            Dictionary<string, Dictionary<string, string>> NodePorts = DataNetwork.GetAllBlockPortsByIp();
-            int Port = Int32.Parse(NodePorts[ipaddress]["MainPort"]);
-            string ResponceBlockchain = FirtexNetwork.AllBlockchainNode(ipaddress, blockchain, Port);
-            string jsonLocalBlockchain = Blockchain.SerializeBlockchainToJson(blockchain);
-            FirtexNetwork.AllBlockchainNode(ipaddress, blockchain, Port);
-        }
-
     }
 
     public static void ReadDataFile(SessionNetwork session)

@@ -28,7 +28,6 @@ public class ServerFirtexNetwork
             if (jsonObject.ContainsKey("type"))
             {
                 string messageType = jsonObject["type"].ToString();
-                Console.WriteLine(jsonMessage);
                 switch (messageType)
                 {
                     case "GetPorts":
@@ -303,7 +302,6 @@ public class ServerFirtexNetwork
             if (!blockchain.ContainsBlock(block))
             {
                 blockchain.AddBlock(block);
-                Console.WriteLine($"Added block from the client to the local blockchain. Index: {block.Index}");
                 return true;
             }
             else

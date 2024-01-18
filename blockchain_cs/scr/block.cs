@@ -10,6 +10,7 @@ public class Block
 {
     public int Index { get; set; }
     public DateTime Timestamp { get; set; }
+    public string Type { get; set; }
     public string Data { get; set; }
     public string PreviousBlockHash { get; set; }
     public string BlockHash { get; set; }
@@ -23,6 +24,7 @@ public class Block
     {
         writer.Write(Index);
         writer.Write(Timestamp.ToBinary());
+        writer.Write(Type);
         writer.Write(Data);
         writer.Write(PreviousBlockHash);
         writer.Write(BlockHash);
@@ -37,6 +39,7 @@ public class Block
     {
         Index = reader.ReadInt32();
         Timestamp = DateTime.FromBinary(reader.ReadInt64());
+        Type = reader.ReadString();
         Data = reader.ReadString();
         PreviousBlockHash = reader.ReadString();
         BlockHash = reader.ReadString();
@@ -129,6 +132,7 @@ public class Blockchain
         {
             Index = 0,
             Timestamp = DateTime.Now,
+            Type = "Genesis",
             Data = "Genesis Block",
             PreviousBlockHash = string.Empty,
             Signature_Key = "Genesis Signature",
@@ -201,6 +205,7 @@ public class Blockchain
                 JObject blockObject = new JObject();
                 blockObject["Index"] = block.Index;
                 blockObject["Timestamp"] = block.Timestamp.ToString();
+                blockObject["Type"] = block.Type;
                 blockObject["Data"] = block.Data;
                 blockObject["PreviousBlockHash"] = block.PreviousBlockHash;
                 blockObject["BlockHash"] = block.BlockHash;
@@ -234,6 +239,7 @@ public class Blockchain
 
             blockObject["Index"] = block.Index;
             blockObject["Timestamp"] = block.Timestamp.ToString();
+            blockObject["Type"] = block.Type;
             blockObject["Data"] = block.Data;
             blockObject["PreviousBlockHash"] = block.PreviousBlockHash;
             blockObject["BlockHash"] = block.BlockHash;
@@ -265,6 +271,7 @@ public class Blockchain
             {
                 Index = (int)blockObject["Index"],
                 Timestamp = DateTime.Parse((string)blockObject["Timestamp"]),
+                Type = (string)blockObject["Type"],
                 Data = (string)blockObject["Data"],
                 PreviousBlockHash = (string)blockObject["PreviousBlockHash"],
                 BlockHash = (string)blockObject["BlockHash"],
@@ -325,6 +332,7 @@ public class Blockchain
                 {
                     Index = (int)blockObject["Index"],
                     Timestamp = DateTime.Parse((string)blockObject["Timestamp"]),
+                    Type = (string)blockObject["Type"],
                     Data = (string)blockObject["Data"],
                     PreviousBlockHash = (string)blockObject["PreviousBlockHash"],
                     BlockHash = (string)blockObject["BlockHash"],

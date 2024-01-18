@@ -142,7 +142,6 @@ public class DataNetwork
 
             }
 
-            Console.WriteLine($"File '{filePath}' created successfully.");
         }
         catch (Exception ex)
         {
@@ -182,7 +181,6 @@ public class DataNetwork
 
             File.AppendAllLines(filePath, lines);
 
-            Console.WriteLine($"Entries added to '{filePath}' successfully.");
         }
         catch (Exception ex)
         {
@@ -206,8 +204,6 @@ public class DataNetwork
                 if (fileNameWithoutExtension.StartsWith("node_"))
                 {
                     string ipAddress = fileNameWithoutExtension.Substring("node_".Length);
-
-                    Console.WriteLine(ipAddress);
 
                     Dictionary<string, string> dataDictionary = ReadDataFile(fileNameWithoutExtension);
 

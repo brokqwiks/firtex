@@ -13,8 +13,11 @@ class AddressGenerator
         {
             byte[] hashBytes = StringToByteArray(hash);
 
+            // Изменяем префикс на 0x8F
+            byte prefix = 0x00;
+
             byte[] versionedBytes = new byte[hashBytes.Length + 1];
-            versionedBytes[0] = 0x00;
+            versionedBytes[0] = prefix;
             Array.Copy(hashBytes, 0, versionedBytes, 1, hashBytes.Length);
 
             byte[] checksum = CalculateChecksum(versionedBytes);
@@ -34,6 +37,7 @@ class AddressGenerator
         }
     }
 
+
     private static byte[] StringToByteArray(string hex)
     {
         int numberChars = hex.Length;
@@ -51,11 +55,16 @@ class AddressGenerator
         {
             byte[] hash1 = sha256.ComputeHash(data);
             byte[] hash2 = sha256.ComputeHash(hash1);
+
+            hash2[0] = 0x8F;
+
             byte[] checksum = new byte[4];
             Array.Copy(hash2, checksum, 4);
+
             return checksum;
         }
     }
+
 
     private static string Base58CheckEncode(byte[] data)
     {

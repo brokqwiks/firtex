@@ -186,7 +186,6 @@ public class FirtexNetwork
 
                     if (!string.IsNullOrEmpty(ipAddressWithMask))
                     {
-                        // Получаем адрес без маски
                         string[] ipParts = ipAddressWithMask.Split('/');
                         return ipParts[0];
                     }
@@ -244,7 +243,6 @@ public class FirtexNetwork
                         int bytesRead = clientStream.Read(response, 0, 4096);
                         string serverResponse = Encoding.ASCII.GetString(response, 0, bytesRead);
 
-                        Console.WriteLine(serverResponse);
                         JObject jsonResponse = JObject.Parse(serverResponse);
 
                         if (jsonResponse.ContainsKey("testconnection") && (bool)jsonResponse["testconnection"])
@@ -342,43 +340,7 @@ public class FirtexNetwork
             return false;
         }
     }
-
-    public static string AllBlockchainNode(string IpAddress, Blockchain blockchain, int port)
-    {
-        try
-        {
-            using (TcpClient tcpClient = new TcpClient(IpAddress, port))
-            {
-                using (NetworkStream clientStream = tcpClient.GetStream())
-                {
-                    JObject jsonMessage = new JObject();
-                    jsonMessage["type"] = "AllBlockchain";
-
-                    string blockchainJson = Blockchain.SerializeBlockchainToJson(blockchain);
-
-                    jsonMessage["ipAddress"] = GetLocalIpNetwork();
-                    jsonMessage["ipAddressToSend"] = IpAddress;
-                    jsonMessage["port"] = port;
-
-                    byte[] data = Encoding.UTF8.GetBytes(jsonMessage.ToString(Formatting.None));
-                    clientStream.Write(data, 0, data.Length);
-
-                    byte[] response = new byte[4096];
-                    int bytesRead = clientStream.Read(response, 0, 4096);
-                    string serverResponse = Encoding.UTF8.GetString(response, 0, bytesRead);
-
-                    tcpClient.Close();
-                    return serverResponse;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-            return null;
-        }
-    }
-
+    
     public static async Task SendBlockchainBlocks(string ipAddress, List<Block> blocks, Blockchain blockchain, int port)
     {
         try
@@ -465,7 +427,6 @@ public class FirtexNetwork
                 if (!blockchain.ContainsBlock(block))
                 {
                     blockchain.AddBlock(block);
-                    Console.WriteLine($"Added block from the remote blockchain. Index: {block.Index}");
                 }
             }
         }

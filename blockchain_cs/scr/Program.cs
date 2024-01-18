@@ -115,11 +115,6 @@ class Program
                         Components.LastBlockResponce(blockchain, session);
                         break;
 
-                    case "test -blockchain":
-                        Components.AllBlockchainConnection(blockchain, session);
-                        
-                        break;
-
                     case "blockchain -json":
                         string jsonBlockchain = Blockchain.SerializeBlockchainToJson(blockchain);
                         Console.WriteLine(jsonBlockchain);
