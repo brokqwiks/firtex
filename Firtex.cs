@@ -97,13 +97,13 @@ using System.Threading.Tasks;
             };
 
             node.GetLocalIpNetwork();
-            node.ConnectFirtexNetwork();
-            node.StartServer();
             node.GetActiveNodes();
+            node.ConnectFirtexNetwork();
             foreach (var ip in node.ActiveNodes)
             {
                 node.ActiveConnect(ip, 8844);
             }
+            node.StartServer();
             Console.ReadLine();
             }
 

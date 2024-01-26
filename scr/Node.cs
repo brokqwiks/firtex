@@ -22,7 +22,7 @@ public class FirtexNode
     public Blockchain blockchain { get; set; }
     public string Data { get; set; }
     public string LocalIp;
-    public string[] ActiveNodes
+    public string[] ActiveNodes;
 
     public bool ConnectFirtexNetwork()
     {
@@ -64,6 +64,7 @@ public class FirtexNode
             if(json.ContainsKey("type") && json["type"] != null)
             {
                 string messageType = json["type"].ToString();
+                Console.WriteLine(jsonMessage);
                 switch(messageType)
                 {
                     case "Active":
