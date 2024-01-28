@@ -55,7 +55,7 @@ public class Keys
 
         public string GeneratePrivateKeyHex()
         {
-            byte[] mnemonicBytes = Encoding.UTF8.GetBytes(mnemonicPhrase);
+            byte[] mnemonicBytes = Encoding.UTF8.GetBytes(mnemonicPhrase.Trim());
             string private_key = Sha256.ComputeSHA256Hash(mnemonicPhrase);
             bool validate_private_key = false;
 
